@@ -17,7 +17,7 @@ const jsonLd = {
 
 export default function AboutPage() {
   return (
-    <div className="bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0 text-zinc-100">
+    <div className="min-h-screen bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0 text-zinc-100">
       <Navigation />
       <main className="px-6 py-24 mx-auto max-w-4xl space-y-12 lg:px-8">
         <section className="space-y-6">
