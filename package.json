@@ -1,7 +1,13 @@
 {
-  "name": "chronark.com",
+  "name": "halukertekin-portfolio",
   "version": "0.1.0",
   "private": true,
+  "description": "Personal portfolio of Haluk Ertekin – Next.js, Tailwind, Contentlayer, deployed on AWS EC2.",
+  "author": "Haluk Ertekin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HalukErtekin/Portfolio"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

@@ -1,33 +1,67 @@
-<div align="center">
-    <a href="https://chronark.com"><h1 align="center">chronark.com</h1></a>
+# halukertekin.com – Personal Portfolio
 
-My personal website, built with [Next.js](https://nextjs.org/), [Tailwind CSS](https://tailwindcss.com/), [Upstash](https://upstash.com?ref=chronark.com), [Contentlayer](https://www.contentlayer.dev/) and deployed to [Vercel](https://vercel.com/).
+Personal website of **Haluk Ertekin**, a Computer Engineering student from Istanbul focusing on AWS cloud, Linux/Nginx administration, Oracle SQL & PL/SQL, low-level C programming, and security fundamentals.  
+The site is built with Next.js (App Router) and deployed on an AWS EC2 instance behind Nginx with full SSL and systemd-based process management.
 
-</div>
+## Tech Stack
 
-<br/>
+- **Frontend:** Next.js 13+, React 18, TypeScript, Tailwind CSS, Contentlayer + MDX
+- **UI:** Dark theme cards, particles background, Lucide icons
+- **Content:** Projects and long-form notes stored as MDX under `content/projects`
+- **Deployment:** AWS EC2 (Amazon Linux 2023), Nginx reverse proxy, Let’s Encrypt SSL, Node.js + pnpm runtime, systemd service for `pnpm start`
 
+## Key Projects Featured
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/upstash/clone?demo-title=Next.js%20Portfolio%20with%20Pageview%20Counter&demo-description=Portfolio%20site%20with%20pageview%20counter%2C%20built%20with%20Next.js%2013%20App%20Router%2C%20Contentlayer%2C%20and%20Upstash%20Redis.&demo-url=https%3A%2F%2Fchronark.com%2F&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F1DA8n5a6WaP9p1FXf9LmUY%2Fc6264fa2732355787bf657df92dda8a1%2FCleanShot_2023-04-17_at_14.17.37.png&project-name=Next.js%20Portfolio%20with%20Pageview%20Counter&repository-name=nextjs-portfolio-pageview-counter&repository-url=https%3A%2F%2Fgithub.com%2Fchronark%2Fchronark.com&from=templates&integration-ids=oac_V3R1GIpkoJorr6fqyiwdhl17)
+1. **AWS EC2 Web Server & Portfolio Deployment**  
+   Full infrastructure setup for halukertekin.com on EC2 with hardened Security Groups, Hostinger DNS, Nginx + Let’s Encrypt, and a Git-based deployment pipeline (`git pull && pnpm build && sudo systemctl restart portfolio`).
 
-## Running Locally
+2. **Oracle SQL & PL/SQL Practice (HR Schema Labs)**  
+   Advanced Oracle SQL and PL/SQL exercises: joins, analytic/window functions, packages, triggers, cursors, and schema modelling with Oracle Data Modeler.
 
+3. **C Programming & Systems Journey**  
+   CS50-inspired C exercises covering pointers, dynamic memory, CLI tools, credit-card validators, and text-processing utilities while mastering manual memory management.
 
-```sh-session
-git clone https://github.com/chronark/chronark.com.git
-cd chronark.com
+4. **Data Mining & Machine Learning Study Projects**  
+   Python notebooks with pandas and scikit-learn covering decision trees, entropy/Gini metrics, feature importance, and overfitting vs. regularization on tabular datasets.
+
+5. **Image Processing Labs (MATLAB)**  
+   MATLAB-based labs implementing spatial filters (low/high-pass, Laplacian, unsharp masking, high-boost, nonlinear filters) with exam-style manual calculations.
+
+Each project lives as an MDX article under `content/projects` and powers both the `/projects` grid and the `/projects/[slug]` detail pages.
+
+## Getting Started
+
+```bash
+pnpm install        # install dependencies
+pnpm dev            # start Next.js locally
+pnpm build          # production build
+pnpm start          # run the compiled app
 ```
 
+> Requires Node.js 18+, pnpm, and Contentlayer (auto-generated on `pnpm dev`/`pnpm build`).
 
-Create a `.env` file similar to [`.env.example`](https://github.com/chronark/chronark.com/blob/main/.env.example).
+### Content Editing
 
-Then install dependencies and run the development server:
-```sh-session
-pnpm install
-pnpm dev
-```
+- Add or edit project files in `content/projects/*.mdx`.
+- Frontmatter should include: `title`, `description`, `date`, `slug`, `published`, plus optional `url` and `repository`.
+- Contentlayer regenerates on every build; no manual steps needed.
 
+## Deployment Workflow
 
-## Cloning / Forking
+1. Develop locally and push to GitHub (`git add . && git commit && git push`).
+2. SSH into the EC2 instance (`/var/www/portfolio`).
+3. Pull latest changes and rebuild:
 
-Please remove all of my personal information (projects, images, etc.) before deploying your own version of this site.
+   ```bash
+   git pull
+   pnpm install --frozen-lockfile
+   pnpm build
+   sudo systemctl restart portfolio
+   ```
+
+4. Nginx serves the production build with SSL certificates managed by Certbot.
+
+## Credits
+
+- Based on the excellent open-source template [chronark/chronark.com](https://github.com/chronark/chronark.com) (MIT).  
+  All layout, animation, and theming foundations come from Chronark’s work; content and infrastructure now reflect Haluk Ertekin’s personal portfolio.

@@ -1,37 +1,38 @@
----
-title: AWS EC2 Web Server Setup
-description: Amazon Linux 2023, Nginx, domain, SSL ve Git ile tam profesyonel bir kisisel web sunucusu kurdum.
-date: "2025-11-17"
-url: https://halukertekin.com
-repository: halukertekin/aws-ec2-webserver
+﻿---
+title: AWS EC2 Web Server & Portfolio Deployment
+description: Built and hardened the infrastructure powering halukertekin.com on Amazon Linux, Nginx, SSL, and a Git-based deployment workflow.
+date: "2025-02-10"
+slug: aws-ec2-web-server
 published: true
+url: https://halukertekin.com
+repository: https://github.com/HalukErtekin/Portfolio
 ---
 
-Bu projede AWS uzerinde sifirdan kendi prod sunucumu kurdum. Amacim modern bir portfolio/blog calistirmak icin guvenli, izlenebilir ve kolay surumlenebilen bir altyapi elde etmekti.
+## Overview
 
-## 1. Altyapi
-- Amazon Linux 2023 AMI ve t3.micro baslangic makinasi
-- Gerektiginde ayni makineyi t3.medium seviyesine buyutebildim
-- Security Group katmaninda yalnizca SSH, HTTP ve HTTPS portlari acik
+I migrated my portfolio to AWS EC2 and treated it like a real production workload: custom domain hosting, SSL termination, systemd process management, and zero-downtime deploys. Everything runs on Amazon Linux 2023 with Node.js + pnpm.
 
-## 2. Domain ve DNS
-- Hostinger uzerindeki domaini dogrudan EC2 IP adresine yonlendirdim
-- www icin ayri kayit tutup ana domaine 301 yonlendirme yaptim
-- Cloudflare ile gecikme ve cache senaryolarini test ettim
+## Architecture Highlights
 
-## 3. Web sunucusu ve SSL
-- Nginx reverse proxy ve static dosya servisleri
-- Certbot ile otomatik SSL yenileme, cron job ile sertifika kontrolu
-- HTTP -> HTTPS yonlendirmesi ve ek guvenlik headerlari
+- **Networking:** Security Groups restricted to SSH (22), HTTP (80), HTTPS (443); fail2ban + UFW for extra protection.
+- **Domain & DNS:** Hostinger DNS records point to the EC2 elastic IP; Cloudflare tested for latency/caching.
+- **Nginx & SSL:** Reverse proxy + static file serving, Let's Encrypt certificates with certbot renewals, HTTP -> HTTPS redirect.
+- **System Services:** Node.js app wrapped in a `portfolio.service` unit; `pnpm build` + `pnpm start` controlled by systemd.
 
-## 4. Deployment hatti
-- GitHub repo uzerinden prod ortama git pull ile dagitim
-- VS Code Remote SSH ile dogrudan sunucuya baglanip hotfix yapabilme
-- CloudWatch Agent ile sistem loglarini merkezi olarak izleme
+## Deployment Workflow
 
-## 5. Sertlestirme
-- UFW ve fail2ban ile brute force korumasi
-- Nginx rate limiting ve temel DDOS onlemleri
-- Otomatik snapshot ve AWS Backup planlari
+1. Push code to GitHub (`HalukErtekin/Portfolio`).
+2. SSH into EC2 and `git pull`.
+3. `pnpm install --frozen-lockfile && pnpm build`.
+4. `sudo systemctl restart portfolio` to swap binaries safely.
+5. Nginx keeps serving traffic while the Node process restarts.
 
-Bu proje sayesinde AWS, Linux ve DevOps bilgisini tek bir yerde topladim. Artik ayni altyapi uzerinde yeni servisleri hizla yayinlayabiliyorum.
+## Operations & Learnings
+
+- Tuned kernel limits and swap to keep the t3.micro instance responsive.
+- Added CloudWatch/cron checks for disk, certificate expiry, and zombie processes.
+- Documented the full runbook for anyone else touching the server.
+
+## Ozet (TR)
+
+Amazon Linux uzerinde guvenli bir Nginx reverse proxy kurup Let's Encrypt SSL, systemd servisleri ve git tabanli dagitim hatti ile halukertekin.com'u uctan uca yonettim.
