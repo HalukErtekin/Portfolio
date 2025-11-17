@@ -1,7 +1,11 @@
 import { Redis } from "@upstash/redis";
 import { NextRequest, NextResponse } from "next/server";
 
-const redis = Redis.fromEnv();
+const redis =
+  process.env.UPSTASH_REDIS_REST_URL &&
+  process.env.UPSTASH_REDIS_REST_TOKEN
+    ? Redis.fromEnv()
+    : null;
 export const config = {
   runtime: "edge",
 };
@@ -12,6 +16,11 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
   }
   if (req.headers.get("Content-Type") !== "application/json") {
     return new NextResponse("must be json", { status: 400 });
+  }
+
+  if (!redis) {
+    // Analytics disabled locally, but respond successfully so the UI stays quiet.
+    return new NextResponse(null, { status: 202 });
   }
 
   const body = await req.json();

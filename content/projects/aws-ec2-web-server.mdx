@@ -1,0 +1,37 @@
+---
+title: AWS EC2 Web Server Setup
+description: Amazon Linux 2023, Nginx, domain, SSL ve Git ile tam profesyonel bir kisisel web sunucusu kurdum.
+date: "2025-11-17"
+url: https://halukertekin.com
+repository: halukertekin/aws-ec2-webserver
+published: true
+---
+
+Bu projede AWS uzerinde sifirdan kendi prod sunucumu kurdum. Amacim modern bir portfolio/blog calistirmak icin guvenli, izlenebilir ve kolay surumlenebilen bir altyapi elde etmekti.
+
+## 1. Altyapi
+- Amazon Linux 2023 AMI ve t3.micro baslangic makinasi
+- Gerektiginde ayni makineyi t3.medium seviyesine buyutebildim
+- Security Group katmaninda yalnizca SSH, HTTP ve HTTPS portlari acik
+
+## 2. Domain ve DNS
+- Hostinger uzerindeki domaini dogrudan EC2 IP adresine yonlendirdim
+- www icin ayri kayit tutup ana domaine 301 yonlendirme yaptim
+- Cloudflare ile gecikme ve cache senaryolarini test ettim
+
+## 3. Web sunucusu ve SSL
+- Nginx reverse proxy ve static dosya servisleri
+- Certbot ile otomatik SSL yenileme, cron job ile sertifika kontrolu
+- HTTP -> HTTPS yonlendirmesi ve ek guvenlik headerlari
+
+## 4. Deployment hatti
+- GitHub repo uzerinden prod ortama git pull ile dagitim
+- VS Code Remote SSH ile dogrudan sunucuya baglanip hotfix yapabilme
+- CloudWatch Agent ile sistem loglarini merkezi olarak izleme
+
+## 5. Sertlestirme
+- UFW ve fail2ban ile brute force korumasi
+- Nginx rate limiting ve temel DDOS onlemleri
+- Otomatik snapshot ve AWS Backup planlari
+
+Bu proje sayesinde AWS, Linux ve DevOps bilgisini tek bir yerde topladim. Artik ayni altyapi uzerinde yeni servisleri hizla yayinlayabiliyorum.
