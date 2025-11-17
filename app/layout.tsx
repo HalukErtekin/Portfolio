@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://halukertekin.com",
   },
-  verification: {
+    verification: {
     google: "nJ_CjIO8M59UtNVB-uEGWsrwRiHEax5fRJXQmmt2VK4",
   },
   icons: {
