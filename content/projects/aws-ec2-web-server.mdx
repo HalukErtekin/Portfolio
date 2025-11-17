@@ -33,6 +33,12 @@ I migrated my portfolio to AWS EC2 and treated it like a real production workloa
 - Added CloudWatch/cron checks for disk, certificate expiry, and zombie processes.
 - Documented the full runbook for anyone else touching the server.
 
+## Impact
+
+Running everything on a lean EC2 instance forced me to design for observability and reproducibility: Terraform-style notes for recreating security groups, shell scripts for safe restarts, and an incident checklist for SSL renewals or DNS changes. Those habits now influence how I approach internships—treating every pet project like production with backups, logging, and vulnerability patches baked in from day one.
+
+It also gave me a reusable AMI image and a hardened Nginx + Node baseline that I can reapply for freelance gigs or hackathon demos. The same playbook covers blue/green deploys, IP allow-lists, and performance testing with k6 so I can prove the site survives traffic spikes without leaving the comfort of a terminal.
+
 ## Ozet (TR)
 
 Amazon Linux uzerinde guvenli bir Nginx reverse proxy kurup Let's Encrypt SSL, systemd servisleri ve git tabanli dagitim hatti ile halukertekin.com'u uctan uca yonettim.

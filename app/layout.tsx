@@ -7,17 +7,28 @@ import { Analytics } from "./components/analytics";
 export const metadata: Metadata = {
   metadataBase: new URL("https://halukertekin.com"),
   title: {
-    default: "Haluk Ertekin",
-    template: "%s | halukertekin.com",
+    default: "Haluk Ertekin — Software Developer & Cloud Engineer",
+    template: "%s | Haluk Ertekin",
   },
   description:
-    "Portfolio of Haluk Ertekin — Computer Engineering student. Projects in AWS, C programming, networking, cybersecurity, and machine learning.",
+    "Haluk Ertekin'in resmi portfolyo sitesi. AWS, Linux, Nginx, Cloud, Siber Güvenlik, Veri Bilimi, C Programlama ve Web Geliştirme alanlarında projeler, makaleler ve notlar.",
+  keywords: [
+    "Haluk Ertekin",
+    "Haluk Ertekin portfolio",
+    "Haluk Ertekin developer",
+    "Haluk Ertekin AWS",
+    "Haluk Ertekin cloud engineer",
+    "Haluk Ertekin cybersecurity",
+    "Haluk Ertekin computer engineering",
+    "Haluk Ertekin web developer",
+  ],
+  authors: [{ name: "Haluk Ertekin", url: "https://halukertekin.com" }],
   openGraph: {
-    title: "Haluk Ertekin | halukertekin.com",
+    title: "Haluk Ertekin — Software Developer",
     description:
-      "Haluk Ertekin — Developer building modern web applications, cloud infrastructure (AWS), and security-focused systems.",
+      "Haluk Ertekin'in resmi portfolyo sitesi. AWS, Linux, Nginx, Cloud, Siber Güvenlik, Veri Bilimi, C Programlama ve Web Geliştirme alanlarında projeler, makaleler ve notlar.",
     url: "https://halukertekin.com",
-    siteName: "halukertekin.com",
+    siteName: "Haluk Ertekin",
     images: [
       {
         url: "/og.png",
@@ -26,14 +37,14 @@ export const metadata: Metadata = {
         alt: "Haluk Ertekin portfolio preview",
       },
     ],
-    locale: "en-US",
+    locale: "tr_TR",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Haluk Ertekin | halukertekin.com",
+    title: "Haluk Ertekin — Software Developer & Cloud Engineer",
     description:
-      "Haluk Ertekin — Developer building modern web applications, cloud infrastructure (AWS), and security-focused systems.",
+      "Haluk Ertekin'in resmi portfolyo sitesi. AWS, Linux, Nginx, Cloud, Siber Güvenlik, Veri Bilimi, C Programlama ve Web Geliştirme alanlarında projeler, makaleler ve notlar.",
     images: ["/og.png"],
   },
   robots: {
@@ -50,7 +61,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://halukertekin.com",
   },
-    verification: {
+  verification: {
     google: "nJ_CjIO8M59UtNVB-uEGWsrwRiHEax5fRJXQmmt2VK4",
   },
   icons: {

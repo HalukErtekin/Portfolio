@@ -1,5 +1,5 @@
 "use client";
-import { ArrowLeft, Eye, Github, Twitter } from "lucide-react";
+import { ArrowLeft, Eye, Github, Mail, Twitter } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -19,9 +19,12 @@ export const Header: React.FC<Props> = ({ project, views }) => {
 
 	const links: { label: string; href: string }[] = [];
 	if (project.repository) {
+		const repoHref = project.repository.startsWith("http")
+			? project.repository
+			: `https://github.com/${project.repository.replace(/^\/+/, "")}`;
 		links.push({
 			label: "GitHub",
-			href: `https://github.com/${project.repository}`,
+			href: repoHref,
 		});
 	}
 	if (project.url) {
@@ -30,6 +33,23 @@ export const Header: React.FC<Props> = ({ project, views }) => {
 			href: project.url,
 		});
 	}
+	const socials = [
+		{
+			href: "https://twitter.com/haluk_ertekin",
+			label: "Follow Haluk on Twitter",
+			Icon: Twitter,
+		},
+		{
+			href: "https://github.com/HalukErtekin",
+			label: "Haluk on GitHub",
+			Icon: Github,
+		},
+		{
+			href: "mailto:halukertekin1907@gmail.com",
+			label: "Email Haluk Ertekin",
+			Icon: Mail,
+		},
+	];
 	useEffect(() => {
 		if (!ref.current) return;
 		const observer = new IntersectionObserver(([entry]) =>
@@ -67,24 +87,23 @@ export const Header: React.FC<Props> = ({ project, views }) => {
 								views,
 							)}
 						</span>
-						<Link target="_blank" href="https://twitter.com/chronark_">
-							<Twitter
-								className={`w-6 h-6 duration-200 hover:font-medium ${
-									isIntersecting
-										? " text-zinc-400 hover:text-zinc-100"
-										: "text-zinc-600 hover:text-zinc-900"
-								} `}
-							/>
-						</Link>
-						<Link target="_blank" href="https://github.com/chronark">
-							<Github
-								className={`w-6 h-6 duration-200 hover:font-medium ${
-									isIntersecting
-										? " text-zinc-400 hover:text-zinc-100"
-										: "text-zinc-600 hover:text-zinc-900"
-								} `}
-							/>
-						</Link>
+						{socials.map(({ href, label, Icon }) => (
+							<Link
+								key={href}
+								target="_blank"
+								href={href}
+								aria-label={label}
+								rel="noreferrer"
+							>
+								<Icon
+									className={`w-6 h-6 duration-200 hover:font-medium ${
+										isIntersecting
+											? " text-zinc-400 hover:text-zinc-100"
+											: "text-zinc-600 hover:text-zinc-900"
+									} `}
+								/>
+							</Link>
+						))}
 					</div>
 
 					<Link
