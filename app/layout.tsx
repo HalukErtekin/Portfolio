@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     template: "%s | Haluk Ertekin",
   },
   description:
-    "Haluk Ertekin'in resmi portfolyo sitesi. AWS, Linux, Nginx, Cloud, Siber Güvenlik, Veri Bilimi, C Programlama ve Web Geliştirme alanlarında projeler, makaleler ve notlar.",
+    "AI, backend, cloud, veri bilimi, güvenlik ve robotik alanlarında geliştirdiğim projeleri ve teknik notları paylaştığım kişisel portföy.",
   keywords: [
     "Haluk Ertekin",
     "Haluk Ertekin portfolio",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Haluk Ertekin — Software Developer",
     description:
-      "Haluk Ertekin'in resmi portfolyo sitesi. AWS, Linux, Nginx, Cloud, Siber Güvenlik, Veri Bilimi, C Programlama ve Web Geliştirme alanlarında projeler, makaleler ve notlar.",
+      "AI, backend, cloud, veri bilimi, güvenlik ve robotik alanlarında geliştirdiğim projeleri ve teknik notları paylaştığım kişisel portföy.",
     url: "https://halukertekin.com",
     siteName: "Haluk Ertekin",
     images: [
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Haluk Ertekin — Software Developer & Cloud Engineer",
     description:
-      "Haluk Ertekin'in resmi portfolyo sitesi. AWS, Linux, Nginx, Cloud, Siber Güvenlik, Veri Bilimi, C Programlama ve Web Geliştirme alanlarında projeler, makaleler ve notlar.",
+      "AI, backend, cloud, veri bilimi, güvenlik ve robotik alanlarında geliştirdiğim projeleri ve teknik notları paylaştığım kişisel portföy.",
     images: ["/og.png"],
   },
   robots: {
@@ -96,8 +96,9 @@ export default function RootLayout({
         <Analytics />
       </head>
       <body
-        className={`bg-black ${process.env.NODE_ENV === "development" ? "debug-screens" : undefined
-          }`}
+        className={`bg-black ${
+          process.env.NODE_ENV === "development" ? "debug-screens" : undefined
+        }`}
       >
         {children}
       </body>
