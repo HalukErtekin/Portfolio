@@ -64,14 +64,15 @@ export default async function ProjectsPage() {
 					</h1>
 					<div className="mt-4 space-y-4 text-zinc-400">
 						<p>
-							Highlighted case studies ranging from AWS infrastructure to low-level
-							programming labs that demonstrate how I design, deploy, and harden
-							real systems for the web.
+							A collection of real-world course projects, research studies, and
+							personal development work spanning AI, secure backend architectures,
+							data science analysis, robotic systems, and relational database design.
 						</p>
 						<p>
-							Every write-up includes concrete tooling (Linux, Oracle, MATLAB,
-							Python, C, and more) plus the outcomes and lessons that shaped my AWS
-							and security-focused workflow.
+							Each write-up covers the stack, engineering approach, challenges, and
+							outcomes, highlighting tooling such as Python, Go, C, Flutter, Oracle
+							SQL/PLSQL, MATLAB, Next.js, Contentlayer, ML libraries, and sensor-based
+							embedded systems.
 						</p>
 					</div>
 				</div>

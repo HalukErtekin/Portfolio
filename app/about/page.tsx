@@ -22,29 +22,36 @@ export default function AboutPage() {
       <main className="px-6 py-24 mx-auto max-w-4xl space-y-12 lg:px-8">
         <section className="space-y-6">
           <p className="text-sm font-semibold tracking-widest text-zinc-500 uppercase">
-            About
+            About Me
           </p>
-          <h1 className="text-4xl font-display font-bold">
-            About Haluk Ertekin
-          </h1>
+          <h1 className="text-4xl font-display font-bold">About Me</h1>
           <p className="text-lg leading-relaxed text-zinc-300">
-            Bilgisayar Mühendisliği öğrencisi olarak AWS, Linux, Nginx, Oracle
-            SQL &amp; PL/SQL, C programlama ve siber güvenlik alanlarında üretken
-            kalıyorum. Karanlık tema portföyümü tamamen kendi yönettiğim AWS EC2
-            altyapısında barındırıyor, sistemd servisleriyle deploy sürecini
-            otomatize ediyorum.
+            Bilgisayar Muhendisligi ogrencisi olarak yapay zeka, backend
+            gelistirme, veri bilimi, veritabani tasarimi ve gomulu sistemler
+            alanlarinda projeler uretiyorum. El yazisi tanima ve yazar kimlik
+            dogrulama sistemi, AES-256 sifrelemeli guvenli mesajlasma
+            uygulamasi, lityum-iyon batarya yaslanma analizi, robotik yilan
+            kontrol sistemi ve kurumsal vize basvuru veritabani gibi farkli
+            disiplinlerde calismalar gelistirdim.
           </p>
           <p className="text-lg leading-relaxed text-zinc-300">
-            Derslerde öğrendiğim kavramları gerçek projelere dönüştürmek için
-            Contentlayer, Next.js ve Tailwind kombinasyonunu kullanıyor, aynı
-            zamanda Türkçe ve İngilizce notlar tutarak toplulukla bilgi paylaşıyorum.
-            Ağ yönetiminden makine öğrenmesine uzanan bu yolculukta güvenlik
-            denetimleri, loglama, otomasyon ve dokümantasyon disiplinini önceliklendiriyorum.
+            Akademik projelerimin yaninda web altyapisi, otomasyon ve sunucu
+            yonetimi tarafinda da aktif olarak calisiyorum. Kendi portfoy sitemi
+            AWS EC2 uzerinde yonettigim Linux ortaminda barindiriyor; Nginx,
+            GitHub Actions ve basit otomasyon scriptleriyle dagitim surecini
+            yonetiyorum. Oracle SQL &amp; PL/SQL, Python, Next.js, Go, Flutter,
+            sensor tabanli gomulu sistemler ve veri analitigi araclariyla
+            uretken kalmaya ozen gosteriyorum.
+          </p>
+          <p className="text-lg leading-relaxed text-zinc-300">
+            Hedefim, yapay zeka, guvenlik, veri analizi ve backend alanlarini
+            birlestirerek olceklenebilir ve teknik olarak saglam cozumler ureten
+            bir muhendislik cizgisi olusturmak.
           </p>
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-white">Bağlantılar</h2>
+          <h2 className="text-2xl font-semibold text-white">Baglantilar</h2>
           <ul className="grid gap-4 text-base text-zinc-300 sm:grid-cols-2">
             <li>
               <Link
@@ -71,7 +78,7 @@ export default function AboutPage() {
                 href="/contact"
                 className="underline decoration-zinc-600 hover:decoration-white"
               >
-                İletişim &mdash; halukertekin1907@gmail.com
+                Iletisim &mdash; halukertekin1907@gmail.com
               </Link>
             </li>
           </ul>
