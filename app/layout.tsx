@@ -7,7 +7,7 @@ import { Analytics } from "./components/analytics";
 export const metadata: Metadata = {
   metadataBase: new URL("https://halukertekin.com"),
   title: {
-    default: "Haluk Ertekin — Software Developer & Cloud Engineer",
+    default: "Haluk Ertekin — Software Developer",
     template: "%s | Haluk Ertekin",
   },
   description:
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Haluk Ertekin — Software Developer & Cloud Engineer",
+    title: "Haluk Ertekin — Software Developer",
     description:
       "AI, backend, cloud, veri bilimi, güvenlik ve robotik alanlarında geliştirdiğim projeleri ve teknik notları paylaştığım kişisel portföy.",
     images: ["/og.png"],
