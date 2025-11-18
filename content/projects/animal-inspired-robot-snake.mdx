@@ -2,90 +2,89 @@
 title: Animal-Inspired Robot Snake
 description: Bio-mimetic Arduino + mobile robotics platform combining multi-servo slithering, Bluetooth control, sensor fusion, and live telemetry/video streaming.
 date: "2025-02-17"
-slug: animal-inspired-robot-snake
 published: true
 ---
 
 ## Overview
 
-Bu proje biyolojik yilan hareketlerini taklit eden moduler bir robot gelistirdi: bes servo eklemden olusan govde, Arduino tabanli kontrol, HC-SR04 ve DHT11 sensörleri, ESP32-CAM video akisi, HC-06 Bluetooth haberlesmesi ve Android mobil arayuz bir araya gelerek uzaktan kumandali, cevreyi algilayabilen bir robot yilan ortaya cikardi.
+This project delivers a modular, biology-inspired robot snake featuring a five-servo body, Arduino-based control, HC-SR04 and DHT11 sensors, an ESP32-CAM stream, HC-06 Bluetooth connectivity, and an Android companion app. Together they form a remote-controlled platform that senses its surroundings while mimicking natural slithering.
 
 ## Motivation
 
-Yilanlar dar alanlardan gecme, engebeli zeminleri asma ve dengede kalma konusunda benzersiz; bu yetenekleri arama-kurtarma, boru/kanal denetimi, izleme, cevresel gozlem ve egitim gibi uygulamalara tasimak icin dusuk maliyetli, tasinabilir ve moduler bir platform hedeflendi.
+Snakes excel at squeezing through confined spaces, climbing uneven terrain, and maintaining balance without limbs. Replicating these capabilities enables search-and-rescue, pipeline inspection, surveillance, environmental monitoring, and education use cases via a portable, low-cost, modular platform.
 
 ## Project Objectives
 
-- Gercekci S-egrisi hareketi uretebilen coklu segment govde tasarlamak.
-- Servo senkronizasyonu ile ileri/geri/yan hareketleri bluetooth komutlariyla yonetmek.
-- Ultrasonik mesafe, sicaklik/nem ve kamera verilerini birleştirmek.
-- HC-06 uzerinden guvenilir kablosuz baglanti ve Android uygulamasi gelistirmek.
-- Sensor verilerini, video akislarini ve acil stop komutlarini anlik gostermek.
+- Design a multi-segment body capable of realistic S-curve motion.
+- Synchronize servos for forward/back/side movements via Bluetooth commands.
+- Fuse ultrasonic distance, temperature/humidity, and camera data.
+- Provide reliable wireless control through the HC-06 and a custom Android app.
+- Surface sensor readings, video feeds, and emergency-stop controls in real time.
 
 ## System Components & Architecture
 
-- **Servo Motors (x5):** Govde bükulmesini ve dalgalanmalari saglar.
-- **Arduino Uno:** PWM sinyalleri, sensor okumalari ve kontrol dongusunu yonetir.
-- **HC-SR04:** Engeller icin 360° farkindaligin kritik oldugu bas kisminda konumlandirilir.
-- **DHT11:** Sicaklik/nem bilgisini toplar, mobil uygulamaya aktarir.
-- **ESP32-CAM:** Canli video yayinlayarak operatore durum farkindaligi saglar.
-- **HC-06 Bluetooth:** Mobil uygulama ile dusuk gecikmeli komut ve telemetri aktarir.
-- **Power Management:** Pil dagitimi, voltaj regule etme ve koruma devreleri.
+- **Servo Motors (×5):** Provide bending and waveform locomotion along the spine.
+- **Arduino Uno:** Drives PWM outputs, reads sensors, and orchestrates the control loop.
+- **HC-SR04:** Mounted at the head for obstacle awareness.
+- **DHT11:** Captures environmental temperature and humidity for the app.
+- **ESP32-CAM:** Streams live video to give operators situational context.
+- **HC-06 Bluetooth:** Delivers low-latency command and telemetry links to mobile devices.
+- **Power Management:** Handles battery distribution, voltage regulation, and protection circuitry.
 
 ## Software Architecture
 
 ### Arduino Firmware
 
-- Bes servo icin hiz/aci profilleri hesaplayan PWM kontrolu.
-- HC-SR04 mesafe olcumu ve otomatik dur/kac komutlari.
-- DHT11 verilerinin okunmasi ve Bluetooth paketlerine eklenmesi.
-- ESP32-CAM ve HC-06 baglantilarinin koordinasyonu, hata durumlarinda fail-safe.
+- Calculates PWM speed/angle profiles for all five servos.
+- Processes HC-SR04 distances and triggers automatic stop/avoid maneuvers.
+- Samples DHT11 data and injects it into Bluetooth packets.
+- Coordinates ESP32-CAM plus HC-06 links with fail-safe handling.
 
 ### Android Mobile App (Flutter/Java)
 
-- Ileri/geri/sol/sag/kamera acisi gibi hareket butonlari.
-- Sensor verileri ve video akisi icin dashboard.
-- Firebase tabanli kullanici kimlik dogrulama, tercih saklama ve log’lar.
-- Düşük gecikmeli Bluetooth haberlesmesi ve acil stop butonu.
+- Provides movement buttons (forward/back/left/right/camera tilt).
+- Displays dashboards for sensor data and live video streams.
+- Uses Firebase for authentication, preference storage, and logging.
+- Maintains low-latency Bluetooth communication plus an emergency-stop control.
 
 ### Backend / Firebase
 
-- Kullanici hesaplari ve token yonetimi.
-- Kullanici tercihi, oturum logu ve guvenli giris kontrolleri.
-- Mobil uygulama ile gercek zamanli veri senkronizasyonu.
+- Manages user accounts and tokens.
+- Stores preferences and session logs with secure access controls.
+- Synchronizes real-time data with the mobile client.
 
 ## Functional Modules
 
-- **Locomotion:** Sinus tabanli servo profil ile S-kurvasi hareket; uygulamadan gelen komutlar ile hiz/yon degisimi.
-- **Obstacle Detection:** Ultrasonik veriyi yorumlayip otomatik durma veya operatoru uyari.
-- **Environmental Monitoring:** DHT11 verisini akista guncelleyerek sicaklik/nem kontrolleri saglar.
-- **User Interface:** Sensor, video ve komut panelini tek ekran uzerinden sunar.
-- **Wireless Communication:** HC-06 ile sifreli paketler, gecikmesiz kumanda.
+- **Locomotion:** Generates S-curve movement via sinusoidal servo profiles with on-demand speed/direction changes.
+- **Obstacle Detection:** Interprets ultrasonic readings to pause or warn the operator automatically.
+- **Environmental Monitoring:** Continuously pushes DHT11 temperature/humidity updates.
+- **User Interface:** Combines sensor, video, and control panels within a single screen.
+- **Wireless Communication:** Uses encrypted HC-06 packets for responsive remote control.
 
 ## SRS Highlights
 
-- **Functional:** Kimlik dogrulama, gercek zamanli hareket kontrolu, stabil Bluetooth baglantisi, sensor veri paylasimi, acil stop.
-- **Non-Functional:** Düşük gecikme, yuksek baglanti guvenilirligi, sezgisel UI, sifreli haberlesme, moduler kod tabani.
-- **Safety:** Elektrik/termal koruma, pil sarj guvenligi, yuvarlatilmis mekanik parcalar.
+- **Functional:** Authentication, real-time motion control, stable Bluetooth link, sensor telemetry, emergency stop.
+- **Non-Functional:** Low-latency response, high connection reliability, intuitive UI, encrypted communication, modular codebase.
+- **Safety:** Electrical/thermal protection, safe battery charging, rounded mechanical edges.
 
 ## Results & Evaluation
 
-- **Locomotion:** Gercege yakin kayma hareketi, dar alan ve engebeli yuzeylerde basarili testler.
-- **Sensor Accuracy:** HC-SR04 minimum false positive ile engel algiladi; DHT11 sabit lab kosullarinda kararlı okuma verdi.
-- **Wireless Performance:** Bluetooth baglantisi surekli ve komutlara anlik yanit verdi.
-- **UI Experience:** Android uygulamasinda sensor ve video stream’i gecikmesiz goruntulendi, Firebase login kesintisiz calisti.
+- **Locomotion:** Delivers life-like slithering across narrow gaps and uneven surfaces.
+- **Sensor Accuracy:** HC-SR04 detects obstacles with minimal false positives; DHT11 remains stable in lab conditions.
+- **Wireless Performance:** Bluetooth connection stays persistent and responsive to commands.
+- **UI Experience:** Android app streams sensor and video data smoothly while Firebase authentication remains uninterrupted.
 
 ## Applications
 
-- Arama-kurtarma, tehlikeli alan denetimi ve endustriyel boru/gozlem operasyonlari.
-- Cevresel izleme, askeri kesif ve guvenlik senaryolari.
-- STEM egitimi, biyomimetik arastirmalar ve swarm robotik calismalari icin platform.
+- Search and rescue, hazardous inspection, and industrial pipeline monitoring.
+- Environmental observation, military reconnaissance, and security.
+- STEM education, biomimetic research, and swarm robotics experimentation.
 
 ## Conclusion
 
-Donanim (servo zinciri, sensorler, kamera, guc) ile yazilimi (Arduino kontrol algoritmalari, Bluetooth haberlesme, Android UI, Firebase SRS) entegre eden bu calisma, dogaya oykunen robotik icin gercekci hareket, cevre farkindaligi ve uzaktan kumanda deneyimi sunuyor. Yeni iterasyonlar otonom navigasyon, swarm koordinasyonu veya AI tabanli kararlarla genisletilebilir.
+By integrating hardware (servo chain, sensors, camera, power) with software (Arduino control algorithms, Bluetooth comms, Android UI, Firebase SRS), the robot snake delivers realistic motion, situational awareness, and remote control for nature-inspired robotics. Future iterations can expand into autonomous navigation, swarm coordination, or AI-driven decision-making.
 
-## Ozet (TR)
+## Summary
 
-Bes servo, Arduino, HC-SR04, DHT11, ESP32-CAM ve HC-06 modullerini birlestirip Flutter tabanli mobil uygulamayla kontrol edilen, S-bukulmeli hareket ve sensör farkindaligina sahip hayvandan esinlenilmis bir robot yilan sistemi insa ettim; arama-kurtarmadan egitime kadar coklu uygulama icin hazir bir platform.
+I combined five servos, Arduino control, HC-SR04, DHT11, ESP32-CAM, HC-06 Bluetooth, and a Flutter-based mobile app to build a snake-inspired robot with S-curve locomotion and environmental awareness that is ready for scenarios ranging from rescue missions to education.
 
