@@ -36,21 +36,13 @@ export default function Home() {
       <div className="hidden w-screen h-px animate-glow md:block animate-fade-right bg-gradient-to-r from-zinc-300/0 via-zinc-300/50 to-zinc-300/0" />
       <div className="my-16 text-center animate-fade-in px-6 max-w-2xl">
         <h2 className="text-lg font-semibold text-zinc-100">
-          Software Developer &amp; Cloud Engineer
+          Software Engineer (Focus on AI, Data &amp; Systems)
         </h2>
         <p className="mt-4 text-sm leading-6 text-zinc-400">
-          I&apos;m a computer engineering student from Istanbul focusing on backend,
-          cloud, and security. Right now I&apos;m deepening my knowledge across AWS,
-          Oracle SQL/PL&ndash;SQL, and automation workflows on hardened Linux servers.
-        </p>
-        <p className="mt-3 text-sm leading-6 text-zinc-400">
-          AWS, Linux, Nginx, siber güvenlik ve web geliştirme alanlarında ölçeklenebilir
-          projeler geliştiriyorum; gerçek sunucularda konuşlandırdığım portföyümde hem
-          İngilizce hem Türkçe notlarla öğrendiklerimi paylaşıyorum.
+          I develop AI-powered systems, secure backend services, and scalable
+          cloud infrastructure.
         </p>
       </div>
-
     </div>
   );
-
 }
