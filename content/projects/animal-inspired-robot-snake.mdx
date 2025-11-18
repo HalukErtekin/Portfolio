@@ -1,0 +1,91 @@
+---
+title: Animal-Inspired Robot Snake
+description: Bio-mimetic Arduino + mobile robotics platform combining multi-servo slithering, Bluetooth control, sensor fusion, and live telemetry/video streaming.
+date: "2025-02-17"
+slug: animal-inspired-robot-snake
+published: true
+---
+
+## Overview
+
+Bu proje biyolojik yilan hareketlerini taklit eden moduler bir robot gelistirdi: bes servo eklemden olusan govde, Arduino tabanli kontrol, HC-SR04 ve DHT11 sensörleri, ESP32-CAM video akisi, HC-06 Bluetooth haberlesmesi ve Android mobil arayuz bir araya gelerek uzaktan kumandali, cevreyi algilayabilen bir robot yilan ortaya cikardi.
+
+## Motivation
+
+Yilanlar dar alanlardan gecme, engebeli zeminleri asma ve dengede kalma konusunda benzersiz; bu yetenekleri arama-kurtarma, boru/kanal denetimi, izleme, cevresel gozlem ve egitim gibi uygulamalara tasimak icin dusuk maliyetli, tasinabilir ve moduler bir platform hedeflendi.
+
+## Project Objectives
+
+- Gercekci S-egrisi hareketi uretebilen coklu segment govde tasarlamak.
+- Servo senkronizasyonu ile ileri/geri/yan hareketleri bluetooth komutlariyla yonetmek.
+- Ultrasonik mesafe, sicaklik/nem ve kamera verilerini birleştirmek.
+- HC-06 uzerinden guvenilir kablosuz baglanti ve Android uygulamasi gelistirmek.
+- Sensor verilerini, video akislarini ve acil stop komutlarini anlik gostermek.
+
+## System Components & Architecture
+
+- **Servo Motors (x5):** Govde bükulmesini ve dalgalanmalari saglar.
+- **Arduino Uno:** PWM sinyalleri, sensor okumalari ve kontrol dongusunu yonetir.
+- **HC-SR04:** Engeller icin 360° farkindaligin kritik oldugu bas kisminda konumlandirilir.
+- **DHT11:** Sicaklik/nem bilgisini toplar, mobil uygulamaya aktarir.
+- **ESP32-CAM:** Canli video yayinlayarak operatore durum farkindaligi saglar.
+- **HC-06 Bluetooth:** Mobil uygulama ile dusuk gecikmeli komut ve telemetri aktarir.
+- **Power Management:** Pil dagitimi, voltaj regule etme ve koruma devreleri.
+
+## Software Architecture
+
+### Arduino Firmware
+
+- Bes servo icin hiz/aci profilleri hesaplayan PWM kontrolu.
+- HC-SR04 mesafe olcumu ve otomatik dur/kac komutlari.
+- DHT11 verilerinin okunmasi ve Bluetooth paketlerine eklenmesi.
+- ESP32-CAM ve HC-06 baglantilarinin koordinasyonu, hata durumlarinda fail-safe.
+
+### Android Mobile App (Flutter/Java)
+
+- Ileri/geri/sol/sag/kamera acisi gibi hareket butonlari.
+- Sensor verileri ve video akisi icin dashboard.
+- Firebase tabanli kullanici kimlik dogrulama, tercih saklama ve log’lar.
+- Düşük gecikmeli Bluetooth haberlesmesi ve acil stop butonu.
+
+### Backend / Firebase
+
+- Kullanici hesaplari ve token yonetimi.
+- Kullanici tercihi, oturum logu ve guvenli giris kontrolleri.
+- Mobil uygulama ile gercek zamanli veri senkronizasyonu.
+
+## Functional Modules
+
+- **Locomotion:** Sinus tabanli servo profil ile S-kurvasi hareket; uygulamadan gelen komutlar ile hiz/yon degisimi.
+- **Obstacle Detection:** Ultrasonik veriyi yorumlayip otomatik durma veya operatoru uyari.
+- **Environmental Monitoring:** DHT11 verisini akista guncelleyerek sicaklik/nem kontrolleri saglar.
+- **User Interface:** Sensor, video ve komut panelini tek ekran uzerinden sunar.
+- **Wireless Communication:** HC-06 ile sifreli paketler, gecikmesiz kumanda.
+
+## SRS Highlights
+
+- **Functional:** Kimlik dogrulama, gercek zamanli hareket kontrolu, stabil Bluetooth baglantisi, sensor veri paylasimi, acil stop.
+- **Non-Functional:** Düşük gecikme, yuksek baglanti guvenilirligi, sezgisel UI, sifreli haberlesme, moduler kod tabani.
+- **Safety:** Elektrik/termal koruma, pil sarj guvenligi, yuvarlatilmis mekanik parcalar.
+
+## Results & Evaluation
+
+- **Locomotion:** Gercege yakin kayma hareketi, dar alan ve engebeli yuzeylerde basarili testler.
+- **Sensor Accuracy:** HC-SR04 minimum false positive ile engel algiladi; DHT11 sabit lab kosullarinda kararlı okuma verdi.
+- **Wireless Performance:** Bluetooth baglantisi surekli ve komutlara anlik yanit verdi.
+- **UI Experience:** Android uygulamasinda sensor ve video stream’i gecikmesiz goruntulendi, Firebase login kesintisiz calisti.
+
+## Applications
+
+- Arama-kurtarma, tehlikeli alan denetimi ve endustriyel boru/gozlem operasyonlari.
+- Cevresel izleme, askeri kesif ve guvenlik senaryolari.
+- STEM egitimi, biyomimetik arastirmalar ve swarm robotik calismalari icin platform.
+
+## Conclusion
+
+Donanim (servo zinciri, sensorler, kamera, guc) ile yazilimi (Arduino kontrol algoritmalari, Bluetooth haberlesme, Android UI, Firebase SRS) entegre eden bu calisma, dogaya oykunen robotik icin gercekci hareket, cevre farkindaligi ve uzaktan kumanda deneyimi sunuyor. Yeni iterasyonlar otonom navigasyon, swarm koordinasyonu veya AI tabanli kararlarla genisletilebilir.
+
+## Ozet (TR)
+
+Bes servo, Arduino, HC-SR04, DHT11, ESP32-CAM ve HC-06 modullerini birlestirip Flutter tabanli mobil uygulamayla kontrol edilen, S-bukulmeli hareket ve sensör farkindaligina sahip hayvandan esinlenilmis bir robot yilan sistemi insa ettim; arama-kurtarmadan egitime kadar coklu uygulama icin hazir bir platform.
+

@@ -1,0 +1,97 @@
+---
+title: Visa Application Management System (VAMS)
+description: Enterprise-grade relational data model that orchestrates every stage of global visa applications from intake to issuance.
+date: "2025-02-17"
+slug: visa-application-management-system
+published: true
+---
+
+## Overview
+
+The Visa Application Management System (VAMS) is a full database design that mirrors how consulates, visa centers, and immigration agencies collaborate in real life. Every actor—applicants, application centers, consulates, finance teams—is modeled with normalized tables, enforced foreign keys, and workflow rules so the entire visa lifecycle can be queried, audited, and reported without ambiguity.
+
+## System Objectives
+
+- Centralize all applicant, passport, document, and payment data in one relational source of truth.
+- Track submission, review, decision, and issuance events with referential integrity.
+- Model how applications flow between centers and consulates to avoid redundancy or anomalies.
+- Provide accurate joins for analytics, compliance checks, and operational dashboards.
+
+## Key Entities & Responsibilities
+
+### Applicant
+
+Captures identity, demographics, and contact info. Applicants can own several passports, open multiple applications, and submit fee payments. Nationality, birth data, and communication fields are mandatory to satisfy consular requirements.
+
+### Passport
+
+Stores passport numbers (PK), issue/expiry dates, issuing authority, and type. Each record links back to exactly one applicant but any applicant can hold zero or many passports over time.
+
+### Application
+
+Represents each visa request with IDs, purpose of travel, destination country, submission timestamp, and status transitions (Pending, Under Review, Approved, Rejected). Every application is tied to required documents, a submission center, and a reviewing consulate.
+
+### Application Documents
+
+Metadata describing the documentation needed per visa class (name, description, validity window). Documents can be reused across applications while enforcing dependencies through junction tables.
+
+### Payment
+
+Logs transactions with payment IDs, amount, method, currency, and fee names. Each payment references the applicant who paid and the application center that received the funds (`Made_To`).
+
+### Application Center
+
+Models visa submission offices with contact info, address, hours, and appointment capacity. Centers mediate between applicants and consulates for both paperwork and payments.
+
+### Consulate
+
+Represents the sovereign authority (PK = Consulate Name) that reviews cases and issues final decisions. Stores jurisdiction, contact channels, and locations. One consulate can handle many application types or countries.
+
+### Visa Result
+
+Captures the official outcome for each processed application, including approval/rejection, reasoning, and a result ID. Links both the reviewing consulate and the visa artifact if the decision is positive.
+
+### Visa
+
+Materializes the issued visa with IDs, visa type (tourist/business/student/etc.), validity range, and the consulate that granted it. Visas only exist if an associated visa result is approved, reinforcing dependency constraints.
+
+## Relationship Modeling
+
+- **Applicant → Passport:** One-to-many ownership; every passport belongs to a single applicant.
+- **Applicant → Application:** Applicants can file multiple requests.
+- **Application ↔ Documents:** Many-to-many through requirement tables, allowing document reuse.
+- **Application Center:** Receives applications and payments, acting as intake and treasury.
+- **Consulate → Application:** Each application is reviewed by a consulate authority.
+- **Consulate → Visa Result:** Decisions originate from consulates and reference downstream visa records.
+- **Visa Result → Visa:** Visas are created only after an approved decision, preserving lifecycle order.
+
+The enhanced ER diagram captures cardinalities and participation constraints so downstream teams understand exactly how data moves between parties.
+
+## Relational Schema & Normalization
+
+All tables are normalized to Third Normal Form, eliminating partial and transitive dependencies. Primary keys are explicitly defined, foreign keys enforce referential integrity, and every attribute is atomic. This guarantees consistent updates, efficient joins, and anomaly-free reporting even under heavy operational load.
+
+## System Strengths
+
+- Highly normalized relational core purpose-built for visa workflows.
+- Traceable processing pipeline from application intake through decision and issuance.
+- Clear separation of responsibilities between applicants, centers, consulates, and financial records.
+- Strong FK constraints that mirror real-world accountability in immigration systems.
+- Comprehensive EER documentation that accelerates onboarding for analysts or developers.
+
+## Potential Enhancements
+
+- Append audit logging to record who changed what and when.
+- Expand status tracking to cover each micro-stage (submission → review → decision → issuance).
+- Allow multiple visa types under a single application to support families or multi-purpose travel.
+- Integrate online appointment booking and secure applicant authentication.
+- Store binary document uploads (BLOB/CLOB) alongside metadata for end-to-end traceability.
+
+## Conclusion
+
+VAMS demonstrates enterprise-grade data modeling that captures the nuance of international visa processing. The project showcases advanced ER reasoning, disciplined normalization, and a workflow-aware schema that governments, consulates, or large visa centers could adopt with minimal changes.
+
+## Ozet (TR)
+
+VAMS, basvurudan vize basimina kadar tum sureci normalizasyon ve referans butunlugu ile modelleyen kurumsal seviyede bir veritabani tasarimi; adaylar, merkezler, konsolosluklar, odemeler ve kararlar arasindaki tum iliskiyi dogrulukla takip edebiliyorum.
+

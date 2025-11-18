@@ -1,0 +1,96 @@
+---
+title: Secure Web-Based Messaging System
+description: AES-256 encrypted enterprise chat for Kültür Technologies with Go backend, responsive web UI, and PostgreSQL persistence tailored to internal comms.
+date: "2025-02-17"
+slug: secure-business-messaging
+published: true
+---
+
+## Overview
+
+Kültür Technologies icin gelistirilen bu tam yigin platform, tarayici tabanli mesajlasmayi kurum icinde tutarak gizlilik, butunluk ve anlik is akisi ihtiyaclarina yanit veriyor. Go ile yazilmis API katmani AES-256 sifreleme uygular, PostgreSQL tum mesajlari ve anahtar metadatasini saklar, HTML/CSS/JS arayuz ise masaustu ve mobil tarayicilarda duyarlı bir sohbet deneyimi sunar.
+
+## Motivation
+
+- Kurumsal sohbet kanallarina yonelik siber tehdit ve veri sizintisi riskleri hizla artiyor.
+- Ticari SaaS servisleri maliyetli, kapali kaynakli ve ozel gereksinimlere uymayabiliyor.
+- Bu platform, tamamen kurumun kontrol ettigi bir sohbet altyapisi, uçtan uca sifreli iletisim ve web tabanli esnek UI saglamak icin insa edildi.
+
+## Project Objectives
+
+- AES-256 ile guvenli mesajlasma tasarlamak.
+- Gercek zamanli metin ve multimedya paylasimini destelemek.
+- Guclu kimlik dogrulama ve erisim kontrol katmani kurmak.
+- PostgreSQL uzerinde yapilandirilmis, anahtar ayrimli veri modeli olusturmak.
+- Duyarlı HTML/CSS/JS arayuzu ile kullanıcı deneyimini optimize etmek.
+
+## System Architecture
+
+### Frontend (HTML5/CSS3/JS)
+
+- Giris/uye olma formlari, sohbet paneli, multimedya yukleme/onkizleme.
+- Mobil ve masaustu icin responsive layout, anlik mesaj rendering’i.
+
+### Backend (Go)
+
+- Kullanici oturumu ve token dogrulama.
+- Mesaj yonlendirme, siraya alma ve concurrency yönetimi.
+- `crypto/aes` + `crypto/cipher` ile AES-256 CBC sifreleme.
+- Multimedya kodlama, API endpoint’leri ve hata yönetimi.
+
+### Database (PostgreSQL)
+
+- Kullanici profilleri (hash’lenmis sifreler).
+- Sifreli mesajlar, zaman damgalari, gonderen/alici UUID’leri.
+- Ayrı Message Keys tablosunda saklanan 256-bit anahtarlar + IV metadata.
+- ER modeli Users, Messages, MessageKeys ana varliklari ile iliskisel bütünlük saglar.
+
+## Cryptographic Workflow
+
+1. 256-bit key ve rastgele IV olusturulur.
+2. Mesaj iceriği AES-256 CBC ile sifrelenir, Base64 kodlanir.
+3. Sifreli payload PostgreSQL’e yazilir; anahtarlar ayri tabloda tutulur.
+4. Yalniz ilgili kullanicilar icin cozme islemi yapilir; Playfair/Polybius gibi klasik sifreler test edildi ancak reddedildi.
+
+## Core Functionality
+
+- **Authentication:** Hash’li kimlik bilgilerinin dogrulanmasi, session saklama ve input validation.
+- **Real-Time Messaging:** Dogrudan kullanici-kullanici sohbeti, metin + multimedia destekli.
+- **Multimedia Sharing:** Resimler sifrelenip saklanir, istemciye decode edilmis halde sunulur.
+- **Key Management:** Mesaj anahtarlari ayrı saklanarak yetkisiz erisime karsi ekstra koruma saglar.
+- **Database Integrity:** Tum iletiler kullanicilar ve anahtar kayitlariyla bagli, veri tutarliligi korunur.
+
+## Implementation Notes
+
+- Go backend API’leri mesaj gonder/al, kimlik dogrulama ve dosya upload yollarini expose eder.
+- Frontend, Auth.html ve Chat.html sayfalarinda asin kron olusturur, async isteklerle sohbeti gunceller.
+- Aktivite akisi: Kullanici login olur → backend JWT/session uretir → mesajlar sifrelenip PostgreSQL’e yazilir → istemci yetkili oldugunda decrypt edilir.
+
+## Testing & Evaluation
+
+- **Authentication Tests:** Dogru/yanlis giris senaryolari, brute-force’e karsi koruma.
+- **Messaging Stability:** Es zamanli mesaj trafiğinde dusuk gecikme ve paket kaybi olmadi.
+- **AES Validation:** Yanlis key/IV durumlari icin hata yakalama; dogru sifreleme/decrypt akisi teyit edildi.
+- **Multimedia:** Base64 sifreli resimler tutarli sekilde depolanip cozumlendi.
+- **Cipher Benchmark:** AES-256, klasik sifreleme yontemlerine gore cok daha guclu ve multimedya uyumlu oldugu tablolarda kanitlandi.
+
+## Security Strengths
+
+- AES-256 sifreleme + ayrik anahtar saklama, sifreli mesajlarin veri tabaninda bile okunamaz olmasini saglar.
+- Sifre hashleme, form validation ve moduler Go backend’i saldırı yuzeyini azaltir.
+- PostgreSQL constraintleri ile veri tutarliligi ve loglanabilirlik garanti edilir.
+
+## Applications
+
+- Kurum ici haberlesme, guvenli dokuman/gorsel paylasimi.
+- Finans, hukuk, danismanlik gibi gizlilik gerektiren sektörler.
+- Uzak ekip koordinasyonu ve ozel ihtiyaçli kurumsal platformlar.
+
+## Conclusion
+
+AES-256 sifreleme, Go tabanli servisler, PostgreSQL veri modeli ve modern web arayuzu birleserek gizlilik, butunluk ve operasyonel verimliligi onceleyen bir mesajlasma araci olustu. Gelecek gelistirmeler icin grup sohbetleri, otomatik key rotasyonu, mesaj silme/sona erdirme politikasi ve E2E guclendirmeleri icin saglam bir temel saglar.
+
+## Ozet (TR)
+
+Kültür Technologies icin AES-256 sifreli, Go backend’li ve PostgreSQL depolu tarayici tabanli bir kurum ici mesajlasma platformu gelistirerek gercek zamanli sohbet, multimedya paylasimi, kimlik dogrulama ve anahtar yonetimini tek bir guvenli mimaride birlestirdim.
+

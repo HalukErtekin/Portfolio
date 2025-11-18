@@ -1,0 +1,94 @@
+---
+title: Lithium-Ion Battery Aging Analysis
+description: 23-month Stanford Energy Control Lab study modeling LIB capacity fade, impedance growth, anomalies, and SOH predictions with Random Forest + linear baselines.
+date: "2025-02-17"
+slug: lithium-ion-battery-aging-analysis
+published: true
+---
+
+## Overview
+
+Stanford Energy Control Lab’in 23 aylik saha datasina dayanan bu calisma, lityum-iyon pillerde kapasite kaybi, impedans artişi ve enerji degradasyonunu anlamak icin ileri istatistik, EDA, anomaly detection ve makine ogrenmesini birlestiriyor. Bulgular BMS sistemleri, EV bakim stratejileri ve grid depolama diagnostigi icin aksiyon alinabilir saglik (SOH) tahminleri sunuyor.
+
+## Motivation
+
+- EV ve enerji depolama sistemlerinde kapasite fade, impedans growth ve termal stresler operasyon risklerini arttiriyor.
+- Dogru SOH tahmini garanti maliyetlerini, RUL stratejilerini ve kimyasal Ar-Ge’yi yonlendiriyor.
+- Bu pipeline gercek suruş/charge pattern’lariyla sinanmis veriler uzerinde yuksek dogruluklu tahminler uretiyor.
+
+## Dataset Description
+
+Iki tamamlayici veri kaynagi kullanildi:
+
+1. **Cycling dataset:** Gercek charge/discharge dongulerinden voltage, current, temperature, charge/discharge capacity, step index ve test time gibi olcumleri icerir (CC/CV + UDDS senaryolari).
+2. **Diagnostic dataset:** Periyodik capacity testleri, EIS ve HPPC oturumlariyla uzun vadeli aging trendlerini izler.
+
+## Exploratory Data Analysis
+
+- **Voltage & Current:** Charge 4.20 V’ta stabilize olurken akim kontrol limitleri icinde degisiyor.
+- **Capacity Decline:** Ilk dongulerde hizli formasyon kayiplari, sonrasinda daha yavas degrade.
+- **Temperature:** 23 °C etrafinda yogunlasmis, fakat yuksek yuklerde spike’lar kaydedildi.
+- **Correlation:** Discharge Energy ↔ Test Time ve Voltage ↔ Step Index gibi guclu iliskiler modeller icin belirleyici.
+- **Anomaly Detection:** Isolation Forest abnormal voltage drop, termal spike ve beklenmedik discharge davranislarini isaretleyerek veri temizlik stratejilerini iyilestirdi.
+
+## Machine Learning Pipeline
+
+Iki ana tahmin gorevi hedeflendi:
+
+1. **State of Health (SOH) Prediction**
+2. **Discharge Energy (Wh) Prediction**
+
+Tum ozellikler cycling + diagnostic kaynaklarindan uretilip, bilimsel olarak anlamli sinyaller secildi.
+
+### SOH Prediction (Random Forest)
+
+- **Girdiler:** Test Time, Voltage, Current, Charge Energy.
+- **Performans:** R² = 0.9875, MAE = 0.14, RMSE = 0.24.
+- 10-fold cross-validation ile genelleme guvencesi saglandi; BMS icine dogrudan entegre edilebilir.
+
+### Energy Prediction (Linear Regression)
+
+Discharge Energy, Test Time ve Step Index’in linear kombinasyonu ile modellenir:
+
+```
+E_discharge = β0 + β1 * TestTime + β2 * StepIndex
+```
+
+- **R²:** 0.7321
+- **RMSE:** 3.04
+- **MAE:** 2.37
+
+Hafif agirlikli ve hizli enerji tahminleri icin pratik bir baseline saglar.
+
+### Clustering Analysis
+
+K-Means, donguleri degrade profillerine gore uc segmente ayirdi:
+
+- **Cluster 1 (Saglikli):** Yuksek kapasite ve dusuk sicaklik varyansi.
+- **Cluster 2 (Orta Yipranma):** Tahmin edilebilir voltage paterni, orta degrade.
+- **Cluster 3 (Agir Aging):** Siklikla voltage drop, termal instabilite ve minimum kapasite.
+
+Bu segmentasyon bakim/onlem planlarini ozellestirmeyi saglar.
+
+## Key Findings
+
+- Random Forest SOH modeli neredeyse kusursuz dogrulukla published benchmark’lari asiyor.
+- Test Time, Voltage, Current ve Step Index bagimsiz degiskenleri guclu prediktorler.
+- K-Means degradasyon siniflarini aciga cikartarak proaktif bakim kararlarini destekliyor.
+- Isolation Forest ile yakalanan anomali olaylari veri kalitesini ve tahmin guvenirligini arttiriyor.
+- Sicakliktaki kucuk kaymalar bile SOH dususlerini ongoren kritik sinyaller.
+
+## Practical Applications
+
+- **BMS:** Gercek zamanli SOH ve kalan omur (RUL) tahminleri, otomatik degradasyon alarmlari.
+- **EV Filolari:** Prediktif bakim, range tahmin hassasiyeti ve garanti maliyetlerinin optimize edilmesi.
+- **Ar-Ge & Uretim:** Erken dongu kayiplarini analiz etme, yeni kimya optimizasyonlari ve formasyon proseslerini iyilestirme.
+
+## Conclusion
+
+Istatisiksel analiz, EDA, Random Forest, lineer regresyon, clustering ve anomaly detection kombinasyonu ile LIB aging’i kapsamli sekilde modellenebiliyor. SOH modelinin R² = 0.9875 performansi veri odakli diagnostiklerin EV ve endustriyel enerji depolamada cığır acici olabilecegini gosteriyor; bu pipeline gelecekteki prediktif batarya analitik calismalari icin saglam bir temel sunuyor.
+
+## Ozet (TR)
+
+Stanford’dan 23 aylik cycling + diagnostic verilerini kullanarak kapasite fade ve enerji degradasyonunu modelleyen, Random Forest ile %98’in uzerinde SOH dogrulugu saglayan ve K-Means/Isolation Forest ile riskli donguleri belirleyen kapsamli bir batarya yaslanma analizi gelistirdim.
+

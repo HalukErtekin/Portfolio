@@ -1,0 +1,100 @@
+---
+title: Handwriting Recognition & Writer Identification
+description: Multi-model AI system that transcribes IAM handwriting samples while fingerprinting each writer via CRNN, Siamese, and boosted hybrid pipelines.
+date: "2025-02-17"
+slug: handwriting-recognition-writer-identification
+published: true
+---
+
+## Overview
+
+Bu proje IAM Handwriting Dataset uzerindeki metin imgelerini ayni anda iki gorev icin analiz ediyor: yazilan kelime/sentensleri tanimak ve yazarin kim oldugunu belirlemek. CNN, CRNN, SVM, Siamese Network ve XGBoost kombinasyonlari ayni deneysel altyapiyla karsilastirildi; boylece biyometrik dogrulama, adli inceleme ve akilli dokuman isleme icin uygulanabilir bir referans mimari ortaya cikti.
+
+## Project Motivation
+
+Klasik sistemler sadece *ne yazildigini* bilir; bu calisma ise stroke basinci, karakter araliklari, egim ve ritim gibi stil ipuclariyla *kimin yazdigini* da modelleyerek guvenlik ve adli senaryolara hitap eder. Az verili durumlarda bile yazar tanimlayabilmek icin hem tanima hem de dogrulama mimarileri ayni veri boru hattinda ele alinmistir.
+
+## Dataset & Preprocessing
+
+- IAM veri setinden en cok ornege sahip 49 yazar secildi; 4 207 tek kanal (113×113) imaj elde edildi.
+- Margin kirpma, gri seviye normalizasyonu, rotasyon/inversion/gurultu enjeksiyonu ile veri zenginlestirildi.
+- Yazar etiketleri one-hot kodlandi; stratified train/val/test dagilimlari ile denge korundu.
+
+## Model Architectures
+
+### CNN
+
+Uzaysal stroke ozellikleri cikartir; tek basina ~77% yazar dogrulugu saglar ve baz siniflandirma icin kullanilir.
+
+### CRNN
+
+CNN + BiLSTM katmanlari ile sekil, ritim ve sirayi ogrenir; CTC loss sayesinde hizli handwriting transcription ve ~88% yazar dogrulugu verir.
+
+### CNN + SVM
+
+CNN ozelliklerini cikarip SVM karar sinirlariyla kucuk/orta veri setlerinde ~87% dogruluk saglar; klasik ML ile derin ozellik harmani sunar.
+
+### CRNN + SVM
+
+Zamansal ozellikleri SVM'e besleyerek %89.9'a ulasir ve degisen writer pattern'larina karsi dayaniklidir.
+
+### CRNN + XGBoost
+
+CRNN’den gelen vektorler uzerinde gradient-boosted tree'ler calisir; karma ozellik etkileşimlerini yakalayip %90.32 ile en yuksek performansi verir.
+
+### Siamese Network
+
+Paylasimli agirlikli CNN ciftleri ve contrastive loss kullanarak yazar dogrulamasi (aynı/different) yapar; ~85% verification dogrulugu ikinci guvenlik katmani olur.
+
+## Multi-Task Learning
+
+Ortak convolutional + recurrent katmanlar iki gorevi ayni anda ogrenir:
+
+1. CTC tabanli handwriting recognition.
+2. Stil temelli yazar siniflandirmasi.
+
+Paylasilan ozellik bankasi daha zengin temsiller, egitim verimliligi ve gercek adli sureclere benzeyen is akislari saglar.
+
+## Performance Summary
+
+| Model                  | Accuracy | Notlar                                    |
+| ---------------------- | -------- | ----------------------------------------- |
+| CNN                    | 77.70%   | Uzaysal ogrenme, sinirli zaman modelleme  |
+| CRNN                   | 88.69%   | Sekans modellemede guclu                  |
+| CNN + SVM              | 87.46%   | Derin ozellik + klasik karar siniri       |
+| CRNN + SVM             | 89.96%   | Zamansal ozellik + SVM sinerjisi          |
+| **CRNN + XGBoost**     | **90.32%** | **En iyi toplam performans**             |
+| Siamese (verification) | 85.35%   | Yazar dogrulama icin binary skor          |
+
+Her deney icin karisiklik matrisleri, writer bazli metrikler ve olasilik dagilim grafiklerine yer verildi.
+
+## Strengths
+
+- Coklu mimariyi ayni pipeline’da karsilastiran kapsamli calisma.
+- Dengeli IAM alt veri seti ile adil degerlendirme.
+- CRNN + XGBoost ve CRNN + SVM gibi hibrit yaklasimlarin guclu performansi.
+- Siamese tabanli verification katmani ile biyometrik kullanima hazirlik.
+- Zengin gorsellestirme ve raporlama ile adli uzmanlara dogrudan gozu kapali rapor sunma.
+
+## Key Contributions
+
+- Ayni altyapida altı model (CNN, CRNN, hibritler, Siamese) egitilip kiyaslandi.
+- CRNN ozelliklerini XGBoost ile birlestiren nadir writer-ID yaklasimi.
+- Dual-task ogrenme ile transcription + author ID ayni agda toplandi.
+- IAM veri seti icin yeniden dengelenmis alt veri pipeline’i paylasildi.
+
+## Applications
+
+- Adli dokuman incelemeleri ve imza/cek dogrulamasi.
+- Biyometrik kimlik dogrulama sistemleri.
+- Arsiv otomasyonu ve tarihsel elyazisi analizi.
+- Bankacilik veya sozlesme kontrolu icin akilli handwriting analitikleri.
+
+## Conclusion
+
+CRNN + XGBoost kombinasyonu en yuksek dogrulugu vererek derin sekans ogrenme ile ensemble kararlarini birlestirmenin gucunu kanitiyor; Siamese dogrulama ise kimlik dogrulama gereksinimlerini karsilayan ekstra katman sagliyor. Bu proje elyazisi tabanli biyometrik sistemler icin bilimsel derinlige ve saha hazirligina sahip bir referans uygula.
+
+## Ozet (TR)
+
+IAM elyazisi verilerinde CTC tabanli tanima ile yazar kimligini ayni anda ogrenebilen, CRNN + XGBoost hibritini zirve performansa tasiyan ve Siamese dogrulamayla guvenlik katmani ekleyen kapsamli bir yapay zeka pipeline’i gelistirdim.
+
