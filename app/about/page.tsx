@@ -25,34 +25,36 @@ export default function AboutPage() {
             About Me
           </p>
           <h1 className="text-4xl font-display font-bold">About Me</h1>
-          <p className="text-lg leading-relaxed text-zinc-300">
-            Bilgisayar Muhendisligi ogrencisi olarak yapay zeka, backend
-            gelistirme, veri bilimi, veritabani tasarimi ve gomulu sistemler
-            alanlarinda projeler uretiyorum. El yazisi tanima ve yazar kimlik
-            dogrulama sistemi, AES-256 sifrelemeli guvenli mesajlasma
-            uygulamasi, lityum-iyon batarya yaslanma analizi, robotik yilan
-            kontrol sistemi ve kurumsal vize basvuru veritabani gibi farkli
-            disiplinlerde calismalar gelistirdim.
-          </p>
-          <p className="text-lg leading-relaxed text-zinc-300">
-            Akademik projelerimin yaninda web altyapisi, otomasyon ve sunucu
-            yonetimi tarafinda da aktif olarak calisiyorum. Kendi portfoy sitemi
-            AWS EC2 uzerinde yonettigim Linux ortaminda barindiriyor; Nginx,
-            GitHub Actions ve basit otomasyon scriptleriyle dagitim surecini
-            yonetiyorum. Oracle SQL &amp; PL/SQL, Python, Next.js, Go, Flutter,
-            sensor tabanli gomulu sistemler ve veri analitigi araclariyla
-            uretken kalmaya ozen gosteriyorum.
-          </p>
-          <p className="text-lg leading-relaxed text-zinc-300">
-            Hedefim, yapay zeka, guvenlik, veri analizi ve backend alanlarini
-            birlestirerek olceklenebilir ve teknik olarak saglam cozumler ureten
-            bir muhendislik cizgisi olusturmak.
-          </p>
+          <div className="mt-4 space-y-4 text-base leading-7 text-zinc-400">
+            <p>
+              Bilgisayar Muhendisligi ogrencisi olarak yapay zeka, backend
+              gelistirme, veri bilimi, veritabani tasarimi ve gomulu sistemler
+              alanlarinda projeler uretiyorum. El yazisi tanima ve yazar kimlik
+              dogrulama sistemi, AES-256 sifrelemeli guvenli mesajlasma
+              uygulamasi, lityum-iyon batarya yaslanma analizi, robotik yilan
+              kontrol sistemi ve kurumsal vize basvuru veritabani gibi farkli
+              disiplinlerde calismalar gelistirdim.
+            </p>
+            <p>
+              Akademik projelerimin yaninda web altyapisi, otomasyon ve sunucu
+              yonetimi tarafinda da aktif olarak calisiyorum. Kendi portfoy
+              sitemi AWS EC2 uzerinde yonettigim Linux ortaminda barindiriyor;
+              Nginx, GitHub Actions ve basit otomasyon scriptleriyle dagitim
+              surecini yonetiyorum. Oracle SQL &amp; PL/SQL, Python, Next.js, Go,
+              Flutter, sensor tabanli gomulu sistemler ve veri analitigi
+              araclariyla uretken kalmaya ozen gosteriyorum.
+            </p>
+            <p>
+              Hedefim, yapay zeka, guvenlik, veri analizi ve backend alanlarini
+              birlestirerek olceklenebilir ve teknik olarak saglam cozumler
+              ureten bir muhendislik cizgisi olusturmak.
+            </p>
+          </div>
         </section>
 
         <section className="space-y-4">
           <h2 className="text-2xl font-semibold text-white">Baglantilar</h2>
-          <ul className="grid gap-4 text-base text-zinc-300 sm:grid-cols-2">
+          <ul className="grid gap-4 text-base text-zinc-400 sm:grid-cols-2">
             <li>
               <Link
                 href="https://github.com/HalukErtekin"

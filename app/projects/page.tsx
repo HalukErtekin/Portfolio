@@ -47,7 +47,21 @@ export default async function ProjectsPage() {
 		);
 	}
 
-	const [featured, ...rest] = publishedProjects;
+	const prioritizedProjects = [...publishedProjects];
+	const featuredSlug =
+		"handwriting-recognition-writer-identification";
+	const featuredIndex = prioritizedProjects.findIndex(
+		(project) => project.slug === featuredSlug,
+	);
+	if (featuredIndex > 0) {
+		const [highlighted] = prioritizedProjects.splice(
+			featuredIndex,
+			1,
+		);
+		prioritizedProjects.unshift(highlighted);
+	}
+
+	const [featured, ...rest] = prioritizedProjects;
 	const [top2, top3] = rest;
 	const remaining = rest.slice(2);
 

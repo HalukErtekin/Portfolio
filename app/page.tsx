@@ -36,7 +36,7 @@ export default function Home() {
       <div className="hidden w-screen h-px animate-glow md:block animate-fade-right bg-gradient-to-r from-zinc-300/0 via-zinc-300/50 to-zinc-300/0" />
       <div className="my-16 text-center animate-fade-in px-6 max-w-2xl">
         <h2 className="text-lg font-semibold text-zinc-100">
-          Software Engineer (Focus on AI, Data &amp; Systems)
+          Software Developer (Focus on AI, Data &amp; Systems)
         </h2>
         <p className="mt-4 text-sm leading-6 text-zinc-400">
           I develop AI-powered systems, secure backend services, and scalable
