@@ -10,7 +10,9 @@ import { Article } from "./article";
 
 // const redis = Redis.fromEnv();
 
-export const revalidate = 60;
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 export default async function ProjectsPage() {
 	const views: Record<string, number> = {};
