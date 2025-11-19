@@ -21,9 +21,6 @@ export default function AboutPage() {
       <Navigation />
       <main className="px-6 py-24 mx-auto max-w-4xl space-y-12 lg:px-8">
         <section className="space-y-6">
-          <p className="text-sm font-semibold tracking-widest text-zinc-500 uppercase">
-            About Me
-          </p>
           <h1 className="text-4xl font-display font-bold">About Me</h1>
           <div className="mt-4 space-y-4 text-base leading-7 text-zinc-400">
             <p>
