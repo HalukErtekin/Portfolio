@@ -1,11 +1,10 @@
-﻿---
+---
 title: "Handwriting Recognition: Writer Identification and Verification in Handwritten Documents Using Hybrid Deep Learning Techniques"
 description: Multi-model AI system that transcribes IAM handwriting samples while fingerprinting each writer via CRNN, Siamese, and boosted hybrid pipelines.
 date: "2025-02-17"
 published: true
 ---
 
-import Image from "next/image";
 
 ## Overview
 
@@ -17,7 +16,7 @@ Conventional handwriting systems only learn _what_ was written. Here the pipelin
 
 ## Dataset & Preprocessing
 
-- Selected the 49 IAM writers with the most samples, yielding 4,207 single-channel 113×113 images.
+- Selected the 49 IAM writers with the most samples, yielding 4,207 single-channel 113�113 images.
 - Applied margin cropping, grayscale normalization, and augmentation (rotation, inversion, noise) to enrich data.
 - One-hot encoded writer labels and used stratified train/validation/test splits to keep classes balanced.
 
@@ -189,5 +188,4 @@ The CRNN + XGBoost combo proves how deep sequential learning and ensemble decisi
 ## Summary
 
 I built an end-to-end AI pipeline that transcribes IAM handwriting with CTC while learning writer identity, elevates CRNN + XGBoost to peak accuracy, and layers on Siamese verification for additional security.
-
 

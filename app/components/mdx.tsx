@@ -3,8 +3,10 @@
 
 "use client";
 
+"use client";
+
 import * as React from "react";
-import Image from "next/image";
+import NextImage, { ImageProps } from "next/image";
 import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import process from "process";
@@ -12,6 +14,32 @@ import process from "process";
 function clsx(...args: any) {
 	return args.filter(Boolean).join(" ");
 }
+
+const ResponsiveImage: React.FC<ImageProps> = ({
+	className,
+	alt,
+	width,
+	height,
+	sizes,
+	...props
+}) => {
+	const resolvedWidth = width ?? 1600;
+	const resolvedHeight = height ?? 900;
+
+	return (
+		<figure className="w-full overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900">
+			<NextImage
+				width={resolvedWidth}
+				height={resolvedHeight}
+				alt={alt ?? ""}
+				sizes={sizes ?? "(min-width: 1024px) 70vw, 100vw"}
+				className={clsx("h-auto w-full object-contain", className)}
+				{...props}
+			/>
+		</figure>
+	);
+};
+
 const components = {
 	h1: ({ className, ...props }) => (
 		<h1
@@ -100,18 +128,6 @@ const components = {
 			{...props}
 		/>
 	),
-	img: ({
-		className,
-		alt,
-		...props
-	}: React.ImgHTMLAttributes<HTMLImageElement>) => (
-		// eslint-disable-next-line @next/next/no-img-element
-		<img
-			className={clsx("rounded-md border border-zinc-200", className)}
-			alt={alt}
-			{...props}
-		/>
-	),
 	hr: ({ ...props }) => (
 		<hr className="my-4 border-zinc-200 md:my-8" {...props} />
 	),
@@ -165,7 +181,17 @@ const components = {
 			{...props}
 		/>
 	),
-	Image,
+	img: ({ className, ...props }) => (
+		// eslint-disable-next-line @next/next/no-img-element
+		<img
+			className={clsx(
+				"w-full rounded-2xl border border-zinc-800 bg-zinc-900 object-contain",
+				className,
+			)}
+			{...props}
+		/>
+	),
+	Image: ResponsiveImage,
 };
 
 interface MdxProps {
