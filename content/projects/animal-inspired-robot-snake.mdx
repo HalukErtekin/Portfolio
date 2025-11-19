@@ -5,6 +5,8 @@ date: "2025-02-17"
 published: true
 ---
 
+import Image from "next/image";
+
 ## Overview
 
 This project delivers a modular, biology-inspired robot snake featuring a five-servo body, Arduino-based control, HC-SR04 and DHT11 sensors, an ESP32-CAM stream, HC-06 Bluetooth connectivity, and an Android companion app. Together they form a remote-controlled platform that senses its surroundings while mimicking natural slithering.
@@ -20,6 +22,29 @@ Snakes excel at squeezing through confined spaces, climbing uneven terrain, and 
 - Fuse ultrasonic distance, temperature/humidity, and camera data.
 - Provide reliable wireless control through the HC-06 and a custom Android app.
 - Surface sensor readings, video feeds, and emergency-stop controls in real time.
+
+<div className="grid gap-6 md:grid-cols-2 text-sm text-zinc-400">
+	<div className="space-y-2">
+		<Image
+			src="/Robot_Snake/activity-flow.png"
+			alt="High-level activity flow from login to robot control"
+			width={1200}
+			height={850}
+			className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+		/>
+		<p>Activity flow tying login, command dispatch, sensor feedback, and emergency stop loops.</p>
+	</div>
+	<div className="space-y-2">
+		<Image
+			src="/Robot_Snake/deployment-diagram.png"
+			alt="Deployment diagram across mobile app, Firebase, and robot hardware"
+			width={1200}
+			height={850}
+			className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+		/>
+		<p>Deployment diagram showing the Android app, Firebase backend, and Arduino hardware links.</p>
+	</div>
+</div>
 
 ## System Components & Architecture
 
@@ -40,6 +65,135 @@ Snakes excel at squeezing through confined spaces, climbing uneven terrain, and 
 - Samples DHT11 data and injects it into Bluetooth packets.
 - Coordinates ESP32-CAM plus HC-06 links with fail-safe handling.
 
+```cpp
+#include <SoftwareSerial.h>
+#include <DHT.h>
+#include <Servo.h>
+
+#define trigPin 3
+#define echoPin 2
+#define DHTPIN 4
+
+SoftwareSerial BTSerial(7, 6); // RX, TX
+
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+
+Servo s1, s2, s3, s4, s5;
+
+long duration;
+long distance;
+
+int counter = 0;
+float lag = 5.712;
+float amplitude = 40;
+float frequency = 1;
+int offset = 6;
+int delayTime = 1;
+int startPause = 500;
+
+void setup() {
+	Serial.begin(9600);
+	BTSerial.begin(9600);
+
+	pinMode(trigPin, OUTPUT);
+	pinMode(echoPin, INPUT);
+
+	s1.attach(8);
+	s2.attach(9);
+	s3.attach(10);
+	s4.attach(11);
+	s5.attach(12);
+
+	dht.begin();
+	delay(3000);
+
+	s1.write(90 + offset + amplitude * cos(5 * lag));
+	s2.write(90 + offset + amplitude * cos(4 * lag));
+	s3.write(90 + offset + amplitude * cos(3 * lag));
+	s4.write(90 + offset + amplitude * cos(2 * lag));
+	s5.write(90 + amplitude * cos(lag));
+
+	delay(startPause);
+}
+
+void loop() {
+	digitalWrite(trigPin, LOW);
+	delayMicroseconds(2);
+	digitalWrite(trigPin, HIGH);
+	delayMicroseconds(10);
+	digitalWrite(trigPin, LOW);
+
+	duration = pulseIn(echoPin, HIGH);
+	distance = (duration / 2) * 0.0343;
+
+	float temperature = dht.readTemperature();
+	float humidity = dht.readHumidity();
+
+	String dataString =
+		"Distance: " + String(distance) + " cm\n" +
+		"Temperature: " + String(temperature) + " degC\n" +
+		"Humidity: " + String(humidity) + "%\n";
+
+	Serial.println(dataString);
+	BTSerial.print(dataString);
+
+	delay(2000);
+}
+```
+
+```cpp
+// Send data via Bluetooth
+BTSerial.print(dataString);
+
+// Read from HC-06 for servo control
+if (BTSerial.available()) {
+	int count = 0;
+	char receivedChar = BTSerial.read();
+
+	// Control servos based on received character
+	if (receivedChar == 'w') {
+		delay(startPause);
+		while (count < 5) {
+			moveForward();
+			count++;
+		}
+		count = 0;
+	} else if (receivedChar == 's') {
+		delay(startPause);
+		while (count < 5) {
+			moveBackward();
+			count++;
+		}
+		count = 0;
+	}
+}
+
+delay(2000); // Set measurement interval to 2 seconds
+
+void moveForward() {
+	for (counter = 0; counter < 360; counter += 1) {
+		delay(delayTime);
+		s1.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 5 * lag));
+		s2.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 4 * lag));
+		s3.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 3 * lag));
+		s4.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 2 * lag));
+		s5.write(90 + amplitude * cos(frequency * counter * PI / 180 + lag));
+	}
+}
+
+void moveBackward() {
+	for (counter = 360; counter > 0; counter -= 1) {
+		delay(delayTime);
+		s1.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 5 * lag));
+		s2.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 4 * lag));
+		s3.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 3 * lag));
+		s4.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 2 * lag));
+		s5.write(90 + amplitude * cos(frequency * counter * PI / 180 + lag));
+	}
+}
+```
+
 ### Android Mobile App (Flutter/Java)
 
 - Provides movement buttons (forward/back/left/right/camera tilt).
@@ -52,6 +206,33 @@ Snakes excel at squeezing through confined spaces, climbing uneven terrain, and 
 - Manages user accounts and tokens.
 - Stores preferences and session logs with secure access controls.
 - Synchronizes real-time data with the mobile client.
+
+<div className="mt-6 space-y-2 text-sm text-zinc-400">
+	<Image
+		src="/Robot_Snake/sequence-diagram.png"
+		alt="Sequence diagram across user, app, server, Arduino, and sensors"
+		width={1600}
+		height={900}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+	/>
+	<p>Sequence diagram detailing end-to-end messaging between the user, mobile app, Firebase, Arduino, and onboard sensors.</p>
+</div>
+
+<div className="mt-8 space-y-2 text-sm text-zinc-400">
+	<div className="relative w-full overflow-hidden rounded-2xl border border-zinc-800 bg-black">
+		<div className="relative" style={{ paddingTop: "56.25%" }}>
+			<iframe
+				className="absolute inset-0 h-full w-full"
+				src="https://www.youtube.com/embed/xVInvh3DBsw?start=5"
+				title="Robot snake demo"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+				referrerPolicy="strict-origin-when-cross-origin"
+				allowFullScreen
+			/>
+		</div>
+	</div>
+	<p>Final field test showing the multi-servo locomotion, live video feed, and mobile control loop.</p>
+</div>
 
 ## Functional Modules
 
@@ -87,4 +268,3 @@ By integrating hardware (servo chain, sensors, camera, power) with software (Ard
 ## Summary
 
 I combined five servos, Arduino control, HC-SR04, DHT11, ESP32-CAM, HC-06 Bluetooth, and a Flutter-based mobile app to build a snake-inspired robot with S-curve locomotion and environmental awareness that is ready for scenarios ranging from rescue missions to education.
-

@@ -5,9 +5,39 @@ date: "2025-02-17"
 published: true
 ---
 
+import Image from "next/image";
+
 ## Overview
 
 This full-stack platform, built for Kultur Technologies, keeps browser-based messaging fully in-house to satisfy confidentiality, integrity, and real-time workflow requirements. A Go API layer applies AES-256 encryption, PostgreSQL stores all messages plus key metadata, and an HTML/CSS/JS interface delivers a responsive chat experience across desktop and mobile.
+
+<div className="grid gap-6 md:grid-cols-2">
+	<Image
+		src="/web_based_secure_messaging_system/web-ui-1.png"
+		alt="Secure messaging login and registration view"
+		width={1200}
+		height={800}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+	/>
+	<Image
+		src="/web_based_secure_messaging_system/web-ui-2.png"
+		alt="Chat interface showing real-time exchange"
+		width={1200}
+		height={800}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+	/>
+</div>
+
+<div className="mt-6 space-y-2 text-sm text-zinc-400">
+	<Image
+		src="/web_based_secure_messaging_system/web-ui-3.png"
+		alt="Media upload and preview workflow"
+		width={1600}
+		height={900}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+	/>
+	<p>Responsive chat windows and the media pipeline rendered by the static HTML/CSS/JS client.</p>
+</div>
 
 ## Motivation
 
@@ -44,12 +74,34 @@ This full-stack platform, built for Kultur Technologies, keeps browser-based mes
 - Keeps 256-bit keys plus IV metadata inside a dedicated MessageKeys table.
 - ER model centers on Users, Messages, and MessageKeys to maintain referential integrity.
 
+<div className="mt-6 space-y-2 text-sm text-zinc-400">
+	<Image
+		src="/web_based_secure_messaging_system/activity-diagram.png"
+		alt="Activity diagram covering auth, encryption, and delivery stages"
+		width={1600}
+		height={900}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+	/>
+	<p>High-level activity diagram connecting the Go services, PostgreSQL storage, and web client.</p>
+</div>
+
 ## Cryptographic Workflow
 
 1. Generate a secure 256-bit key and random IV.
 2. Encrypt message payload with AES-256 CBC and Base64 encode it.
 3. Write ciphertext to PostgreSQL while storing keys in a separate table.
 4. Decrypt only for authorized users; historical ciphers like Playfair or Vigenere were evaluated but rejected for insufficient strength.
+
+<div className="mt-4 space-y-2 text-sm text-zinc-400">
+	<Image
+		src="/web_based_secure_messaging_system/aes-diagram.png"
+		alt="AES-256 block diagram used in the project"
+		width={1200}
+		height={800}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+	/>
+	<p>Reference diagram used to document the AES-256 CBC round structure implemented in Go.</p>
+</div>
 
 ## Core Functionality
 
@@ -92,4 +144,3 @@ By combining AES-256 encryption, Go services, PostgreSQL data modeling, and a mo
 ## Summary
 
 I engineered an AES-256 encrypted, Go-backed, PostgreSQL-persisted browser messaging platform for Kultur Technologies that unifies real-time chat, multimedia sharing, authentication, and key management in one secure architecture.
-

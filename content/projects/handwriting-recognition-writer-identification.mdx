@@ -1,9 +1,11 @@
----
+﻿---
 title: "Handwriting Recognition: Writer Identification and Verification in Handwritten Documents Using Hybrid Deep Learning Techniques"
 description: Multi-model AI system that transcribes IAM handwriting samples while fingerprinting each writer via CRNN, Siamese, and boosted hybrid pipelines.
 date: "2025-02-17"
 published: true
 ---
+
+import Image from "next/image";
 
 ## Overview
 
@@ -11,13 +13,55 @@ This project analyzes images from the IAM Handwriting Dataset for two objectives
 
 ## Project Motivation
 
-Conventional handwriting systems only learn *what* was written. Here the pipeline also models *who* wrote it by capturing cues like stroke pressure, spacing, slant, and rhythm. Recognition and verification models share the same data path so even with few samples, the system can still attribute authorship.
+Conventional handwriting systems only learn _what_ was written. Here the pipeline also models _who_ wrote it by capturing cues like stroke pressure, spacing, slant, and rhythm. Recognition and verification models share the same data path so even with few samples, the system can still attribute authorship.
 
 ## Dataset & Preprocessing
 
 - Selected the 49 IAM writers with the most samples, yielding 4,207 single-channel 113×113 images.
 - Applied margin cropping, grayscale normalization, and augmentation (rotation, inversion, noise) to enrich data.
 - One-hot encoded writer labels and used stratified train/validation/test splits to keep classes balanced.
+
+<div className="grid gap-6 md:grid-cols-2">
+	<div className="space-y-2 text-sm text-zinc-400">
+		<Image
+			src="/projects/handwriting/orijinal.png"
+			alt="Original IAM word sample"
+			width={900}
+			height={600}
+			className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+		/>
+		<p>Raw IAM sample prior to the cleaning pipeline.</p>
+	</div>
+	<div className="space-y-2 text-sm text-zinc-400">
+		<Image
+			src="/projects/handwriting/patchlenmis.png"
+			alt="Patched IAM word sample"
+			width={900}
+			height={600}
+			className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+		/>
+		<p>Patched, deskewed, and normalized crop fed to the CNN/CRNN stack.</p>
+	</div>
+</div>
+
+The verification problem changes difficulty depending on how distinctive the handwriting is. I therefore curated two qualitative buckets that were used for human-in-the-loop checks:
+
+<div className="grid gap-6 md:grid-cols-2">
+	<Image
+		src="/projects/handwriting/karakteristik-yazarlar.png"
+		alt="Highly characteristic handwriting samples"
+		width={1200}
+		height={900}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+	/>
+	<Image
+		src="/projects/handwriting/karakteristik-olmayan-yazarlar.png"
+		alt="Less characteristic handwriting samples"
+		width={1200}
+		height={900}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+	/>
+</div>
 
 ## Model Architectures
 
@@ -54,6 +98,27 @@ Shared convolutional and recurrent layers learn both tasks simultaneously:
 
 This shared feature bank yields richer representations, better training efficiency, and workflows that mirror real forensic pipelines.
 
+### Optimization & Training Stability
+
+The CRNN variants were run through staged learning-rate windows until convergence. Loss curves stayed smooth thanks to gradient clipping and CTC stabilization:
+
+<div className="grid gap-6 md:grid-cols-2">
+	<Image
+		src="/projects/handwriting/training-history1-2-3.png"
+		alt="Training history for first three experiments"
+		width={1200}
+		height={850}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+	/>
+	<Image
+		src="/projects/handwriting/training-history4-5.png"
+		alt="Training history for final experiments"
+		width={1200}
+		height={850}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+	/>
+</div>
+
 ## Performance Summary
 
 | Model                  | Accuracy | Notes                                             |
@@ -67,17 +132,45 @@ This shared feature bank yields richer representations, better training efficien
 
 Each experiment ships with confusion matrices, per-writer metrics, and probability distribution charts.
 
+<div className="grid gap-6 md:grid-cols-2">
+	<Image
+		src="/projects/handwriting/cnn-accuracy.png"
+		alt="CNN accuracy per writer"
+		width={1200}
+		height={900}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+	/>
+	<Image
+		src="/projects/handwriting/crnn-accuracy.png"
+		alt="CRNN accuracy per writer"
+		width={1200}
+		height={900}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+	/>
+</div>
+
+<div className="mt-6 space-y-2 text-sm text-zinc-400">
+	<Image
+		src="/projects/handwriting/comparison.png"
+		alt="Overall comparison between architectures"
+		width={1600}
+		height={900}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+	/>
+	<p>Side-by-side benchmark summary that guided the decision to ship the CRNN + XGBoost stack for production writer identification.</p>
+</div>
+
 ## Strengths
 
 - Comprehensive comparison of multiple architectures in a single pipeline.
 - Fair evaluation via a balanced IAM subset.
 - Strong hybrid performance from CRNN + XGBoost and CRNN + SVM.
 - Siamese verification layer primes the system for biometric deployments.
-- Visualizations and reporting tailored for forensic stakeholders.
+- Visualizations and reporting tailored for forensic stakeholders (examples above).
 
 ## Key Contributions
 
-- Trained and compared six models (CNN, CRNN, hybrids, Siamese) under one infrastructure.
+- Trained and compared six models (CNN, CRNN, hybrids, Siamese) under one infrastructure with uniform logging.
 - Introduced a writer-ID approach that feeds CRNN features into XGBoost.
 - Demonstrated dual-task learning where transcription and author ID share the same network.
 - Published the balanced IAM subset pipeline for reproducibility.
@@ -96,3 +189,5 @@ The CRNN + XGBoost combo proves how deep sequential learning and ensemble decisi
 ## Summary
 
 I built an end-to-end AI pipeline that transcribes IAM handwriting with CTC while learning writer identity, elevates CRNN + XGBoost to peak accuracy, and layers on Siamese verification for additional security.
+
+
