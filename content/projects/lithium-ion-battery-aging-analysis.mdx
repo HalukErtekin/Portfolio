@@ -1,4 +1,4 @@
----
+﻿---
 title: Lithium-Ion Battery Aging Analysis
 description: 23-month Stanford Energy Control Lab study modeling LIB capacity fade, impedance growth, anomalies, and SOH predictions with Random Forest + linear baselines.
 date: "2025-02-17"
@@ -27,20 +27,19 @@ Two complementary sources feed the models:
 
 - **Voltage & Current:** Charging stabilizes around 4.20 V while current stays within controlled limits.
 - **Capacity Decline:** Early formation loss appears as a sharp drop, followed by gradual stabilization.
-- **Temperature:** Readings cluster near 23 � deg C with spikes during high-load events.
-- **Correlation:** Strong relationships such as Discharge Energy ↔ Test Time and Voltage ↔ Step Index guide feature engineering.
+- **Temperature:** Readings cluster near 23 Â deg C with spikes during high-load events.
+- **Correlation:** Strong relationships such as Discharge Energy â†” Test Time and Voltage â†” Step Index guide feature engineering.
 - **Anomaly Detection:** Isolation Forest flags abnormal voltage dips, thermal spikes, and irregular discharge episodes, improving downstream model reliability.
 
-<div className="mt-6 grid gap-6 md:grid-cols-2 text-sm text-zinc-400">
+<div className="mt-6 flex flex-col gap-8 text-sm text-zinc-400">
 	<div className="space-y-2">
 		<Image
 			src="/battery_aging_analysis/correlation-heatmap.png"
 			alt="Correlation heatmap between major cycling variables"
 			width={1200}
 			height={900}
-			className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+			data-caption="Heatmap exposing voltage, time, and energy interactions that drove feature selection."
 		/>
-		<p>Heatmap exposing voltage, time, and energy interactions that drove feature selection.</p>
 	</div>
 	<div className="space-y-2">
 		<Image
@@ -48,9 +47,8 @@ Two complementary sources feed the models:
 			alt="Isolation Forest outlier detection chart"
 			width={1200}
 			height={900}
-			className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+			data-caption="Isolation Forest sweep highlighting abnormal cycles removed before training."
 		/>
-		<p>Isolation Forest sweep highlighting abnormal cycles removed before training.</p>
 	</div>
 </div>
 
@@ -66,7 +64,7 @@ Features come from both cycling and diagnostic streams, focusing on signals with
 ### SOH Prediction (Random Forest)
 
 - **Inputs:** Test time, voltage, current, and charge energy.
-- **Performance:** R�^2 = 0.9875, MAE = 0.14, RMSE = 0.24.
+- **Performance:** RÂ^2â€¯=â€¯0.9875, MAEâ€¯=â€¯0.14, RMSEâ€¯=â€¯0.24.
 - Ten-fold cross-validation confirms generalization, making the model ready for real-time BMS integration.
 
 <div className="mt-6 space-y-2 text-sm text-zinc-400">
@@ -75,9 +73,8 @@ Features come from both cycling and diagnostic streams, focusing on signals with
 		alt="SOH actual vs predicted chart"
 		width={1600}
 		height={900}
-		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+		data-caption="Random Forest estimates track measured SOH with sub-0.2% average error."
 	/>
-	<p>Random Forest estimates track measured SOH with sub-0.2% average error.</p>
 </div>
 
 ### Energy Prediction (Linear Regression)
@@ -85,10 +82,10 @@ Features come from both cycling and diagnostic streams, focusing on signals with
 Discharge energy is modeled as a linear combination of test time and step index:
 
 ```
-E_discharge = �^20 + �^21 * TestTime + �^22 * StepIndex
+E_discharge = Î^20 + Î^21 * TestTime + Î^22 * StepIndex
 ```
 
-- **R�^2:** 0.7321
+- **RÂ^2:** 0.7321
 - **RMSE:** 3.04
 - **MAE:** 2.37
 
@@ -98,9 +95,9 @@ This lightweight estimator gives fast energy forecasts for embedded systems.
 
 K-Means segments cycles into three degradation profiles:
 
-- **Cluster 1 – Healthy:** Highest capacity and lowest temperature variance.
-- **Cluster 2 – Moderate Aging:** Predictable voltage behavior with mid-level degradation.
-- **Cluster 3 – Severe Aging:** Frequent voltage drops, thermal instability, and minimal capacity.
+- **Cluster 1 â€“ Healthy:** Highest capacity and lowest temperature variance.
+- **Cluster 2 â€“ Moderate Aging:** Predictable voltage behavior with mid-level degradation.
+- **Cluster 3 â€“ Severe Aging:** Frequent voltage drops, thermal instability, and minimal capacity.
 
 These clusters support targeted maintenance and replacement strategies.
 
@@ -120,9 +117,10 @@ These clusters support targeted maintenance and replacement strategies.
 
 ## Conclusion
 
-Combining statistical analysis, EDA, Random Forests, linear regression, clustering, and anomaly detection provides a full picture of lithium-ion battery aging. With R�^2 = 0.9875 on SOH predictions, the pipeline demonstrates how data-driven diagnostics can transform EV and industrial energy storage operations while laying a solid foundation for future predictive battery analytics.
+Combining statistical analysis, EDA, Random Forests, linear regression, clustering, and anomaly detection provides a full picture of lithium-ion battery aging. With RÂ^2â€¯=â€¯0.9875 on SOH predictions, the pipeline demonstrates how data-driven diagnostics can transform EV and industrial energy storage operations while laying a solid foundation for future predictive battery analytics.
 
 ## Summary
 
 I built a comprehensive battery-aging analysis that ingests 23 months of cycling plus diagnostic data, models capacity fade and energy degradation with high-accuracy Random Forest and regression baselines, and pinpoints risky cycles via K-Means and Isolation Forest.
+
 

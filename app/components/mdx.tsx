@@ -6,7 +6,6 @@
 "use client";
 
 import * as React from "react";
-import NextImage, { ImageProps } from "next/image";
 import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import process from "process";
@@ -15,28 +14,39 @@ function clsx(...args: any) {
 	return args.filter(Boolean).join(" ");
 }
 
-const ResponsiveImage: React.FC<ImageProps> = ({
+const FigureContext = React.createContext<() => number>(() => 0);
+
+type ResponsiveImageProps = React.ImgHTMLAttributes<HTMLImageElement>;
+
+const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
 	className,
 	alt,
-	width,
-	height,
-	sizes,
+	["data-caption"]: caption,
 	...props
-}) => {
-	const resolvedWidth = width ?? 1600;
-	const resolvedHeight = height ?? 900;
+}) => (
+	<figure className="w-full max-w-4xl mx-auto overflow-hidden rounded-2xl border border-zinc-700 bg-white">
+		{/* eslint-disable-next-line @next/next/no-img-element */}
+		<img
+			loading="lazy"
+			decoding="async"
+			className={clsx("block w-full h-auto object-contain", className)}
+			alt={alt ?? ""}
+			{...props}
+		/>
+		<FigureNumber caption={(caption as string) ?? alt} />
+	</figure>
+);
+
+const FigureNumber: React.FC<{ caption?: string }> = ({ caption }) => {
+	const getNextNumber = React.useContext(FigureContext);
+	const [number] = React.useState(() => getNextNumber());
+
+	if (!caption) return null;
 
 	return (
-		<figure className="w-full overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900">
-			<NextImage
-				width={resolvedWidth}
-				height={resolvedHeight}
-				alt={alt ?? ""}
-				sizes={sizes ?? "(min-width: 1024px) 70vw, 100vw"}
-				className={clsx("h-auto w-full object-contain", className)}
-				{...props}
-			/>
-		</figure>
+		<figcaption className="mt-2 text-sm text-zinc-500 text-center">
+			<strong>Figure {number}.</strong> {caption}
+		</figcaption>
 	);
 };
 
@@ -200,10 +210,13 @@ interface MdxProps {
 
 export function Mdx({ code }: MdxProps) {
 	const Component = useMDXComponent(code, { process });
+	const counterRef = React.useRef(0);
 
 	return (
-		<div className="mdx">
-			<Component components={components} />
-		</div>
+		<FigureContext.Provider value={() => ++counterRef.current}>
+			<div className="mdx">
+				<Component components={components} />
+			</div>
+		</FigureContext.Provider>
 	);
 }

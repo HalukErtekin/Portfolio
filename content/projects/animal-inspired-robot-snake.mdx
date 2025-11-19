@@ -1,4 +1,4 @@
----
+﻿---
 title: Animal-Inspired Robot Snake
 description: Bio-mimetic Arduino + mobile robotics platform combining multi-servo slithering, Bluetooth control, sensor fusion, and live telemetry/video streaming.
 date: "2025-02-17"
@@ -30,8 +30,8 @@ Snakes excel at squeezing through confined spaces, climbing uneven terrain, and 
 			width={1200}
 			height={850}
 			className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+			data-caption="Activity flow showing user authentication, command dispatch, and emergency-stop loop."
 		/>
-		<p>Activity flow tying login, command dispatch, sensor feedback, and emergency stop loops.</p>
 	</div>
 	<div className="space-y-2">
 		<Image
@@ -40,14 +40,14 @@ Snakes excel at squeezing through confined spaces, climbing uneven terrain, and 
 			width={1200}
 			height={850}
 			className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+			data-caption="Deployment diagram illustrating the Android app, Firebase backend, and Arduino hardware."
 		/>
-		<p>Deployment diagram showing the Android app, Firebase backend, and Arduino hardware links.</p>
 	</div>
 </div>
 
 ## System Components & Architecture
 
-- **Servo Motors (×5):** Provide bending and waveform locomotion along the spine.
+- **Servo Motors (Ã—5):** Provide bending and waveform locomotion along the spine.
 - **Arduino Uno:** Drives PWM outputs, reads sensors, and orchestrates the control loop.
 - **HC-SR04:** Mounted at the head for obstacle awareness.
 - **DHT11:** Captures environmental temperature and humidity for the app.
@@ -213,8 +213,8 @@ void moveBackward() {
 		width={1600}
 		height={900}
 		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+		data-caption="Sequence diagram detailing the message flow between the user, mobile app, Firebase, Arduino, and onboard sensors."
 	/>
-	<p>Sequence diagram detailing end-to-end messaging between the user, mobile app, Firebase, Arduino, and onboard sensors.</p>
 </div>
 
 <div className="mt-8 space-y-2 text-sm text-zinc-400">

@@ -1,4 +1,4 @@
----
+﻿---
 title: Secure Web-Based Messaging System
 description: AES-256 encrypted enterprise chat for Kultur Technologies with Go backend, responsive web UI, and PostgreSQL persistence tailored to internal comms.
 date: "2025-02-17"
@@ -10,32 +10,31 @@ published: true
 
 This full-stack platform, built for Kultur Technologies, keeps browser-based messaging fully in-house to satisfy confidentiality, integrity, and real-time workflow requirements. A Go API layer applies AES-256 encryption, PostgreSQL stores all messages plus key metadata, and an HTML/CSS/JS interface delivers a responsive chat experience across desktop and mobile.
 
-<div className="grid gap-6 md:grid-cols-2">
+<div className="flex flex-col gap-8">
 	<Image
 		src="/web_based_secure_messaging_system/web-ui-1.png"
-		alt="Secure messaging login and registration view"
+		alt="Secure messaging marketing landing and primary layout"
 		width={1200}
 		height={800}
-		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+		data-caption="Landing experience that introduces the Kultur Technologies secure messaging stack."
 	/>
 	<Image
 		src="/web_based_secure_messaging_system/web-ui-2.png"
 		alt="Chat interface showing real-time exchange"
 		width={1200}
 		height={800}
-		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+		data-caption="Login and registration flows optimized for rapid onboarding across desktop and mobile."
 	/>
 </div>
 
-<div className="mt-6 space-y-2 text-sm text-zinc-400">
+<div className="flex flex-col gap-4 text-sm text-zinc-400">
 	<Image
 		src="/web_based_secure_messaging_system/web-ui-3.png"
 		alt="Media upload and preview workflow"
 		width={1600}
 		height={900}
-		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+		data-caption="Responsive chat window showcasing the encrypted media pipeline rendered by the static HTML/CSS/JS client."
 	/>
-	<p>Responsive chat windows and the media pipeline rendered by the static HTML/CSS/JS client.</p>
 </div>
 
 ## Motivation
@@ -73,15 +72,14 @@ This full-stack platform, built for Kultur Technologies, keeps browser-based mes
 - Keeps 256-bit keys plus IV metadata inside a dedicated MessageKeys table.
 - ER model centers on Users, Messages, and MessageKeys to maintain referential integrity.
 
-<div className="mt-6 space-y-2 text-sm text-zinc-400">
+<div className="flex flex-col gap-4 text-sm text-zinc-400">
 	<Image
 		src="/web_based_secure_messaging_system/activity-diagram.png"
 		alt="Activity diagram covering auth, encryption, and delivery stages"
 		width={1600}
 		height={900}
-		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+		data-caption="Activity diagram connecting the Go services, PostgreSQL storage, and web client workflows."
 	/>
-	<p>High-level activity diagram connecting the Go services, PostgreSQL storage, and web client.</p>
 </div>
 
 ## Cryptographic Workflow
@@ -91,15 +89,14 @@ This full-stack platform, built for Kultur Technologies, keeps browser-based mes
 3. Write ciphertext to PostgreSQL while storing keys in a separate table.
 4. Decrypt only for authorized users; historical ciphers like Playfair or Vigenere were evaluated but rejected for insufficient strength.
 
-<div className="mt-4 space-y-2 text-sm text-zinc-400">
+<div className="flex flex-col gap-4 text-sm text-zinc-400">
 	<Image
 		src="/web_based_secure_messaging_system/aes-diagram.png"
 		alt="AES-256 block diagram used in the project"
 		width={1200}
 		height={800}
-		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+		data-caption="Reference diagram documenting the AES-256 CBC round structure implemented in Go."
 	/>
-	<p>Reference diagram used to document the AES-256 CBC round structure implemented in Go.</p>
 </div>
 
 ## Core Functionality
@@ -114,7 +111,7 @@ This full-stack platform, built for Kultur Technologies, keeps browser-based mes
 
 - Go backend exposes endpoints for message send/receive, authentication, and file uploads.
 - Frontend pages (`Auth.html`, `Chat.html`) handle async updates to keep the chat live.
-- Activity flow: user logs in → backend issues JWT/session → messages are encrypted and stored → authorized clients decrypt on demand.
+- Activity flow: user logs in â†’ backend issues JWT/session â†’ messages are encrypted and stored â†’ authorized clients decrypt on demand.
 
 ## Testing & Evaluation
 
