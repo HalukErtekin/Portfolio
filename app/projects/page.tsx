@@ -1,6 +1,7 @@
 import type { Project } from "@/.contentlayer/generated";
 import { allProjects } from "contentlayer/generated";
 import { Eye } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
 import { Card } from "../components/card";
@@ -9,6 +10,31 @@ import { Article } from "./article";
 // import { Redis } from "@upstash/redis";
 
 // const redis = Redis.fromEnv();
+
+const projectsDescription =
+	"AI, backend, veri bilimi, robotik ve güvenlik odaklı gerçek dünya projelerinin teknik detayları ve kullanılan teknolojiler.";
+
+export const metadata: Metadata = {
+	title: "Projeler | Haluk Ertekin",
+	description: projectsDescription,
+	openGraph: {
+		title: "Projeler | Haluk Ertekin",
+		description: projectsDescription,
+		url: "https://halukertekin.com/projects",
+		siteName: "Haluk Ertekin",
+		locale: "tr_TR",
+		type: "website",
+	},
+	twitter: {
+		card: "summary",
+		title: "Projeler | Haluk Ertekin",
+		description: projectsDescription,
+		creator: "@haluk_ertekin",
+	},
+	alternates: {
+		canonical: "https://halukertekin.com/projects",
+	},
+};
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";

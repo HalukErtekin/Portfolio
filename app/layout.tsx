@@ -4,104 +4,139 @@ import LocalFont from "@next/font/local";
 import { Metadata } from "next";
 import { Analytics } from "./components/analytics";
 
+const siteUrl = "https://halukertekin.com";
+const siteDescription =
+	"Yapay zeka, backend, bulut, veri bilimi, güvenlik ve robotik alanlarında geliştirdiğim projeleri ve teknik notlarımı paylaştığım kişisel portföy.";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://halukertekin.com"),
-  title: {
-    default: "Haluk Ertekin — Software Developer",
-    template: "%s | Haluk Ertekin",
-  },
-  description:
-    "AI, backend, cloud, veri bilimi, güvenlik ve robotik alanlarında geliştirdiğim projeleri ve teknik notları paylaştığım kişisel portföy.",
-  keywords: [
-    "Haluk Ertekin",
-    "Haluk Ertekin portfolio",
-    "Haluk Ertekin developer",
-    "Haluk Ertekin AWS",
-    "Haluk Ertekin cloud engineer",
-    "Haluk Ertekin cybersecurity",
-    "Haluk Ertekin computer engineering",
-    "Haluk Ertekin web developer",
-  ],
-  authors: [{ name: "Haluk Ertekin", url: "https://halukertekin.com" }],
-  openGraph: {
-    title: "Haluk Ertekin — Software Developer",
-    description:
-      "AI, backend, cloud, veri bilimi, güvenlik ve robotik alanlarında geliştirdiğim projeleri ve teknik notları paylaştığım kişisel portföy.",
-    url: "https://halukertekin.com",
-    siteName: "Haluk Ertekin",
-    images: [
-      {
-        url: "/og.png",
-        width: 1920,
-        height: 1080,
-        alt: "Haluk Ertekin portfolio preview",
-      },
-    ],
-    locale: "tr_TR",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Haluk Ertekin — Software Developer",
-    description:
-      "AI, backend, cloud, veri bilimi, güvenlik ve robotik alanlarında geliştirdiğim projeleri ve teknik notları paylaştığım kişisel portföy.",
-    images: ["/og.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  alternates: {
-    canonical: "https://halukertekin.com",
-  },
-  verification: {
-    google: "nJ_CjIO8M59UtNVB-uEGWsrwRiHEax5fRJXQmmt2VK4",
-  },
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon.png", type: "image/png" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
-    shortcut: ["/favicon.ico"],
-    apple: "/apple-touch-icon.png",
-  },
-  manifest: "/site.webmanifest",
+	metadataBase: new URL(siteUrl),
+	title: {
+		default: "Haluk Ertekin — Software Developer",
+		template: "%s | Haluk Ertekin",
+	},
+	description: siteDescription,
+	keywords: [
+		"Haluk Ertekin",
+		"yazılım geliştirici",
+		"yapay zeka mühendisi",
+		"backend developer",
+		"bulut mimarisi",
+		"siber güvenlik",
+		"AWS",
+		"Next.js portföy",
+		"Veri bilimi projeleri",
+		"Türk yazılım mühendisi",
+	],
+	authors: [{ name: "Haluk Ertekin", url: siteUrl }],
+	creator: "Haluk Ertekin",
+	publisher: "Haluk Ertekin",
+	openGraph: {
+		title: "Haluk Ertekin — Software Developer",
+		description: siteDescription,
+		url: siteUrl,
+		siteName: "Haluk Ertekin",
+		images: [
+			{
+				url: "/og.png",
+				width: 1920,
+				height: 1080,
+				alt: "Haluk Ertekin portfolio önizleme görseli",
+			},
+		],
+		locale: "tr_TR",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Haluk Ertekin — Software Developer",
+		description: siteDescription,
+		creator: "@haluk_ertekin",
+		images: ["/og.png"],
+	},
+	robots: {
+		index: true,
+		follow: true,
+		googleBot: {
+			index: true,
+			follow: true,
+			"max-video-preview": -1,
+			"max-image-preview": "large",
+			"max-snippet": -1,
+		},
+	},
+	alternates: {
+		canonical: siteUrl,
+	},
+	verification: {
+		google: "nJ_CjIO8M59UtNVB-uEGWsrwRiHEax5fRJXQmmt2VK4",
+	},
+	icons: {
+		icon: [
+			{ url: "/favicon.ico" },
+			{ url: "/favicon.png", type: "image/png" },
+			{ url: "/favicon.svg", type: "image/svg+xml" },
+		],
+		shortcut: ["/favicon.ico"],
+		apple: "/apple-touch-icon.png",
+	},
+	manifest: "/site.webmanifest",
+	category: "technology",
 };
+
+const structuredData = [
+	{
+		"@context": "https://schema.org",
+		"@type": "WebSite",
+		name: "Haluk Ertekin",
+		url: siteUrl,
+		inLanguage: "tr",
+		description: siteDescription,
+	},
+	{
+		"@context": "https://schema.org",
+		"@type": "Person",
+		name: "Haluk Ertekin",
+		jobTitle: "Software Developer",
+		url: siteUrl,
+		image: `${siteUrl}/og.png`,
+		sameAs: [
+			"https://github.com/HalukErtekin",
+			"https://twitter.com/haluk_ertekin",
+		],
+	},
+];
+
 const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
+	subsets: ["latin"],
+	variable: "--font-inter",
 });
 
 const calSans = LocalFont({
-  src: "../public/fonts/CalSans-SemiBold.ttf",
-  variable: "--font-calsans",
+	src: "../public/fonts/CalSans-SemiBold.ttf",
+	variable: "--font-calsans",
 });
 
 export default function RootLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return (
-    <html lang="en" className={[inter.variable, calSans.variable].join(" ")}>
-      <head>
-        <Analytics />
-      </head>
-      <body
-        className={`bg-black ${
-          process.env.NODE_ENV === "development" ? "debug-screens" : undefined
-        }`}
-      >
-        {children}
-      </body>
-    </html>
-  );
+	return (
+		<html lang="tr" className={[inter.variable, calSans.variable].join(" ")}>
+			<head>
+				<Analytics />
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+				/>
+			</head>
+			<body
+				className={`bg-black ${
+					process.env.NODE_ENV === "development" ? "debug-screens" : undefined
+				}`}
+			>
+				{children}
+			</body>
+		</html>
+	);
 }

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { allProjects } from "contentlayer/generated";
 import { Mdx } from "@/app/components/mdx";
@@ -9,6 +10,9 @@ import { Redis } from "@upstash/redis";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
+
+const siteUrl = "https://halukertekin.com";
+const defaultOgImage = "/og.png";
 
 type Props = {
   params: {
@@ -27,6 +31,60 @@ export async function generateStaticParams(): Promise<Props["params"][]> {
     .map((p) => ({
       slug: p.slug,
     }));
+}
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const slug = params?.slug;
+  const project = allProjects.find((item) => item.slug === slug);
+
+  if (!project) {
+    return {
+      title: "Proje bulunamadı | Haluk Ertekin",
+      description: "İstenen proje sayfası bulunamadı.",
+    };
+  }
+
+  const title = `${project.title} | Projeler | Haluk Ertekin`;
+  const description =
+    project.description ??
+    "Haluk Ertekin'in teknik projeleri, kullanılan teknolojiler ve çıktıları.";
+  const url = `${siteUrl}/projects/${project.slug}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      url,
+      siteName: "Haluk Ertekin",
+      locale: "tr_TR",
+      images: [
+        {
+          url: defaultOgImage,
+          width: 1920,
+          height: 1080,
+          alt: `${project.title} kapak görseli`,
+        },
+      ],
+      publishedTime: project.date
+        ? new Date(project.date).toISOString()
+        : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      creator: "@haluk_ertekin",
+      images: [defaultOgImage],
+    },
+  };
 }
 
 export default async function PostPage({ params }: Props) {

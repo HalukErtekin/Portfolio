@@ -1,6 +1,32 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
 import { Navigation } from "../components/nav";
+
+const aboutDescription =
+	"Haluk Ertekin'in yapay zeka, backend, veri bilimi ve güvenlik odağındaki deneyimi, kullandığı teknolojiler ve iletişim bağlantıları.";
+
+export const metadata: Metadata = {
+	title: "Hakkımda | Haluk Ertekin",
+	description: aboutDescription,
+	openGraph: {
+		title: "Hakkımda | Haluk Ertekin",
+		description: aboutDescription,
+		url: "https://halukertekin.com/about",
+		siteName: "Haluk Ertekin",
+		locale: "tr_TR",
+		type: "profile",
+	},
+	twitter: {
+		card: "summary",
+		title: "Hakkımda | Haluk Ertekin",
+		description: aboutDescription,
+		creator: "@haluk_ertekin",
+	},
+	alternates: {
+		canonical: "https://halukertekin.com/about",
+	},
+};
 
 const jsonLd = {
   "@context": "https://schema.org",
