@@ -12,9 +12,9 @@ const navigation = [
 export default function Home() {
   return (
     <div className="relative flex flex-col items-center justify-center w-screen h-screen overflow-hidden bg-gradient-to-tl from-black via-zinc-600/20 to-black">
-      <HeroSpline className="pointer-events-none absolute inset-y-[-20%] right-[-12%] hidden lg:block w-[80vw] max-w-[1000px] z-0" />
+      <HeroSpline className="pointer-events-none absolute inset-y-[-0%] right-[-10%] hidden lg:block w-[72vw] max-w-[900px] z-0" />
       <nav className="relative z-10 my-16 animate-fade-in">
-        <ul className="flex items-center justify-center gap-4">
+        <ul className="flex items-center justify-center gap-10">
           {navigation.map((item) => (
             <Link
               key={item.href}
