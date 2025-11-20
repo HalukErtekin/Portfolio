@@ -5,11 +5,7 @@ import { Locale, locales } from "@/i18n/config";
 
 type LanguageSwitcherProps = {
 	locale: Locale;
-	labels: {
-		label: string;
-		tr: string;
-		en: string;
-	};
+	labels: { label: string } & Record<Locale, string>;
 };
 
 function swapLocale(pathname: string, targetLocale: Locale) {
@@ -29,7 +25,7 @@ export function LanguageSwitcher({ locale, labels }: LanguageSwitcherProps) {
 	return (
 		<div className="flex items-center gap-2 text-xs text-zinc-400">
 			<span className="sr-only">{labels.label}</span>
-			{(locales as Locale[]).map((option) => {
+			{locales.map((option) => {
 				const active = option === locale;
 				return (
 					<button
