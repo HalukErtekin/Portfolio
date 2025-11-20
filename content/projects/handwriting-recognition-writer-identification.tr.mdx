@@ -1,0 +1,190 @@
+---
+title: "El Yazısı Tanıma: Hibrit Derin Öğrenme ile Yazar Tanımlama ve Doğrulama"
+description: CRNN, Siamese ve boost edilmiş hibrit hatlarla IAM el yazısı örneklerini hem çözen hem yazarı parmak izi gibi tanımlayan çok modelli AI sistemi.
+slug: handwriting-recognition-writer-identification
+locale: tr
+date: "2025-02-17"
+published: true
+---
+
+## Genel Bakış
+
+Bu proje, IAM Handwriting Dataset görüntülerini aynı anda iki hedef için işler: yazılan kelime/cümleleri çözmek ve bunları kimin yazdığını tanımak. CNN, CRNN, SVM, Siamese Networks ve XGBoost konfigürasyonları aynı deneysel boru hattında çalışır; böylece biyometrik doğrulama, adli analiz ve akıllı doküman iş akışları için yeniden üretilebilir bir plan çıkar.
+
+## Proje Motivasyonu
+
+Klasik el yazısı sistemleri yalnızca _ne_ yazıldığını öğrenir. Bu boru hattı aynı zamanda yazı baskısı, aralık, eğim ve ritim gibi ipuçlarını yakalayarak _kim_ yazdı sorusunu da modeller. Tanıma ve doğrulama modelleri aynı veri yolunu paylaştığından, az örnek olsa bile sistem yazarı atayabilir.
+
+## Veri Seti ve Ön İşleme
+
+- En çok örneğe sahip 49 IAM yazar seçildi; 4.207 tek kanallı 113×113 görüntü elde edildi.
+- Kenar boşlukları kırpma, gri seviye normalizasyonu ve zenginleştirme (döndürme, ters çevirme, gürültü) uygulandı.
+- Yazar etiketleri one-hot kodlandı; dengeli kalması için katmanlı train/validation/test bölmeleri kullanıldı.
+
+<div className="flex flex-col items-center gap-8">
+	<div className="space-y-3 text-base text-zinc-500 w-full max-w-3xl">
+		<Image
+			src="/projects/handwriting/orijinal.png"
+			alt="Orijinal IAM kelime örneği"
+			width={900}
+			height={600}
+			className="w-full"
+			data-caption="Temizleme boru hattı öncesi ham IAM örneği."
+		/>
+	</div>
+	<div className="space-y-3 text-base text-zinc-500 w-full max-w-3xl">
+		<Image
+			src="/projects/handwriting/patchlenmis.png"
+			alt="Düzeltilmiş IAM kelime örneği"
+			width={900}
+			height={600}
+			className="w-full"
+			data-caption="CNN/CRNN yığınına giren yamalanmış, eğikliği giderilmiş ve normalize edilmiş kırpım."
+		/>
+	</div>
+</div>
+
+Doğrulama probleminin zorluğu el yazısının ayırt ediciliğine göre değişiyor. Bu yüzden insan denetimi için iki niteliksel grup oluşturdum:
+
+<div className="flex flex-col gap-8">
+	<Image
+		src="/projects/handwriting/karakteristik-yazarlar.png"
+		alt="Belirgin el yazısı örnekleri"
+		width={1200}
+		height={900}
+		data-caption="Yüksek derecede karakteristik yazarları içeren insan denetimli set."
+	/>
+	<Image
+		src="/projects/handwriting/karakteristik-olmayan-yazarlar.png"
+		alt="Daha az karakteristik el yazısı örnekleri"
+		width={1200}
+		height={900}
+		data-caption="Belirsiz veya düşük sinyalli el yazılarını temsil eden örnek grup."
+	/>
+</div>
+
+## Model Mimarileri
+
+### CNN
+
+Mekansal stroke özelliklerini çıkarır; taban sınıflandırıcı olarak ~%77 yazar doğruluğu sağlar.
+
+### CRNN
+
+CNN ve BiLSTM katmanlarını istifler; şekil, ritim ve sırayı öğrenir. CTC kaybı hızlı transkripsiyonun yanında ~%88 yazar doğruluğu sunar.
+
+### CNN + SVM
+
+CNN gömülerini SVM ayrım sınırına besler; ~%87 doğruluk, derin özellikleri küçük veri kümeleri için klasik ML ile harmanlar.
+
+### CRNN + SVM
+
+Zamansal CRNN özelliklerini SVM sınıflandırıcısına verir; %89,9 doğruluk ve yazarlar arası değişime karşı daha iyi sağlamlık üretir.
+
+### CRNN + XGBoost
+
+CRNN öznitelik vektörlerinde gradient-boosted ağaçlar çalıştırır, karmaşık etkileşimleri yakalar ve %90,32 ile en iyi doğruluğu elde eder.
+
+### Siamese Network
+
+Ağırlık paylaşan CNN ikizlerini kontrastif kayıpla kullanır; iki örneğin aynı yazardan gelip gelmediğine karar verir. ~%85 doğrulama doğruluğu, ek bir güvenlik katmanı sağlar.
+
+## Çok Görevli Öğrenme
+
+Paylaşılan konvolüsyonel ve tekrarlayan katmanlar her iki görevi aynı anda öğrenir:
+
+1. CTC tabanlı el yazısı tanıma.
+2. Stil odaklı yazar sınıflandırma.
+
+Bu paylaşımlı özellik havuzu daha zengin temsiller, daha verimli eğitim ve gerçek adli boru hatlarına benzeyen akışlar üretir.
+
+### Optimizasyon ve Eğitim Kararlılığı
+
+CRNN varyantları, yakınsamaya kadar aşamalı öğrenme oranı pencereleriyle çalıştırıldı. Gradyan kırpma ve CTC stabilizasyonu sayesinde kayıp eğrileri düzgün kaldı:
+
+<div className="flex flex-col gap-8">
+	<Image
+		src="/projects/handwriting/training-history1-2-3.png"
+		alt="İlk üç deney için eğitim geçmişi"
+		width={1200}
+		height={850}
+		data-caption="CNN, CRNN ve CRNN+SVM deneylerinde düzgün yakınsamayı gösteren eğitim geçmişi."
+	/>
+	<Image
+		src="/projects/handwriting/training-history4-5.png"
+		alt="Son deneyler için eğitim geçmişi"
+		width={1200}
+		height={850}
+		data-caption="CRNN+XGBoost ve Siamese doğrulama koşularının eğitim geçmişi."
+	/>
+</div>
+
+## Performans Özeti
+
+| Model                  | Doğruluk | Notlar                                                 |
+| ---------------------- | -------- | ------------------------------------------------------ |
+| CNN                    | 77.70%   | Güçlü mekansal öğrenici, sınırlı zamansal modelleme    |
+| CRNN                   | 88.69%   | Üstün dizi modelleme                                   |
+| CNN + SVM              | 87.46%   | Derin özellikler + klasik sınır                       |
+| CRNN + SVM             | 89.96%   | Zamansal özellikler ve SVM sinerjisi                   |
+| **CRNN + XGBoost**     | **90.32%** | **En iyi genel performans**                           |
+| Siamese (doğrulama)    | 85.35%   | İkili puanlama, yazar doğrulama                        |
+
+Her deney; karışıklık matrisleri, yazar başına metrikler ve olasılık dağılım grafikleri ile gelir.
+
+<div className="flex flex-col gap-8">
+	<Image
+		src="/projects/handwriting/cnn-accuracy.png"
+		alt="CNN için yazar bazlı doğruluk"
+		width={1200}
+		height={900}
+		data-caption="CNN temel modeli için yazar bazlı doğruluk dağılımı."
+	/>
+	<Image
+		src="/projects/handwriting/crnn-accuracy.png"
+		alt="CRNN için yazar bazlı doğruluk"
+		width={1200}
+		height={900}
+		data-caption="CRNN modeli için yazar bazlı doğruluk dağılımı."
+	/>
+</div>
+
+<div className="flex flex-col gap-4 text-sm text-zinc-400">
+	<Image
+		src="/projects/handwriting/comparison.png"
+		alt="Mimariler arası genel karşılaştırma"
+		width={1600}
+		height={900}
+		data-caption="Üretim için CRNN + XGBoost yığınına karar verirken referans alınan yan yana özet."
+	/>
+</div>
+
+## Güçlü Yanlar
+
+- Tek bir boru hattında çoklu mimariyi kapsamlı şekilde kıyaslar.
+- Dengeli IAM alt kümesiyle adil değerlendirme.
+- CRNN + XGBoost ve CRNN + SVM’den güçlü hibrit performans.
+- Siamese doğrulama katmanı biyometrik dağıtımlara zemin hazırlar.
+- Adli paydaşlara yönelik görselleştirmeler ve raporlama.
+
+## Temel Katkılar
+
+- Altı modeli (CNN, CRNN, hibritler, Siamese) tek altyapıda, tekdüzen loglama ile eğittim ve kıyasladım.
+- CRNN özelliklerini XGBoost’a besleyen yazar-ID yaklaşımını tanıttım.
+- Transkripsiyon ve yazar kimliğinin aynı ağı paylaştığı çift görevli öğrenmeyi gösterdim.
+- Yeniden üretilebilirlik için dengeli IAM alt kümesi boru hattını yayımladım.
+
+## Uygulamalar
+
+- Adli doküman incelemeleri ve imza/çek doğrulama.
+- Biyometrik kimlik doğrulama sistemleri.
+- Arşiv otomasyonu ve tarihî el yazısı analitiği.
+- Bankacılık veya sözleşme kontrolü için akıllı el yazısı analizi.
+
+## Sonuç
+
+CRNN + XGBoost kombinasyonu, derin ardışık öğrenme ile ensemble kararlarının birbirini nasıl güçlendirdiğini kanıtlıyor; Siamese doğrulayıcı ise üretim sistemlerinin beklediği kimlik kontrol katmanını sağlıyor. Genel olarak boru hattı hem bilimsel titizlik hem saha hazırlığı sunuyor.
+
+## Özet
+
+IAM el yazısını CTC ile çözerken yazar kimliğini de öğrenen uçtan uca bir AI boru hattı kurdum; CRNN + XGBoost’u en yüksek doğruluğa taşıdım ve ek güvenlik için Siamese doğrulama katmanını ekledim.

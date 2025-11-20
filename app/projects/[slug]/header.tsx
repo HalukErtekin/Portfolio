@@ -2,6 +2,8 @@
 import { ArrowLeft, Eye, Github, Mail, Twitter } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import { LanguageSwitcher } from "@/app/components/language-switcher";
+import { Locale } from "@/i18n/config";
 
 type Props = {
 	project: {
@@ -12,8 +14,14 @@ type Props = {
 	};
 
 	views: number;
+	locale: Locale;
+	switcher: {
+		label: string;
+		tr: string;
+		en: string;
+	};
 };
-export const Header: React.FC<Props> = ({ project, views }) => {
+export const Header: React.FC<Props> = ({ project, views, locale, switcher }) => {
 	const ref = useRef<HTMLElement>(null);
 	const [isIntersecting, setIntersecting] = useState(true);
 
@@ -73,41 +81,44 @@ export const Header: React.FC<Props> = ({ project, views }) => {
 				}`}
 			>
 				<div className="container flex flex-row-reverse items-center justify-between p-6 mx-auto">
-					<div className="flex justify-between gap-8">
-						<span
-							title="View counter for this page"
-							className={`duration-200 hover:font-medium flex items-center gap-1 ${
-								isIntersecting
-									? " text-zinc-400 hover:text-zinc-100"
-									: "text-zinc-600 hover:text-zinc-900"
-							} `}
-						>
-							<Eye className="w-5 h-5" />{" "}
-							{Intl.NumberFormat("en-US", { notation: "compact" }).format(
-								views,
-							)}
-						</span>
-						{socials.map(({ href, label, Icon }) => (
-							<Link
-								key={href}
-								target="_blank"
-								href={href}
-								aria-label={label}
-								rel="noreferrer"
+					<div className="flex items-center gap-6">
+						<LanguageSwitcher locale={locale} labels={switcher} />
+						<div className="flex justify-between gap-6">
+							<span
+								title="View counter for this page"
+								className={`duration-200 hover:font-medium flex items-center gap-1 ${
+									isIntersecting
+										? " text-zinc-400 hover:text-zinc-100"
+										: "text-zinc-600 hover:text-zinc-900"
+								} `}
 							>
-								<Icon
-									className={`w-6 h-6 duration-200 hover:font-medium ${
-										isIntersecting
-											? " text-zinc-400 hover:text-zinc-100"
-											: "text-zinc-600 hover:text-zinc-900"
-									} `}
-								/>
-							</Link>
-						))}
+								<Eye className="w-5 h-5" />{" "}
+								{Intl.NumberFormat("en-US", { notation: "compact" }).format(
+									views,
+								)}
+							</span>
+							{socials.map(({ href, label, Icon }) => (
+								<Link
+									key={href}
+									target="_blank"
+									href={href}
+									aria-label={label}
+									rel="noreferrer"
+								>
+									<Icon
+										className={`w-6 h-6 duration-200 hover:font-medium ${
+											isIntersecting
+												? " text-zinc-400 hover:text-zinc-100"
+												: "text-zinc-600 hover:text-zinc-900"
+										} `}
+									/>
+								</Link>
+							))}
+						</div>
 					</div>
 
 					<Link
-						href="/projects"
+						href={`/${locale}/projects`}
 						className={`duration-200 hover:font-medium ${
 							isIntersecting
 								? " text-zinc-400 hover:text-zinc-100"

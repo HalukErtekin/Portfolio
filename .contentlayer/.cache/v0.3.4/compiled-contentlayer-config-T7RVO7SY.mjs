@@ -4,7 +4,13 @@ import remarkGfm from "remark-gfm";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-var computedFields = {
+var projectComputedFields = {
+  path: {
+    type: "string",
+    resolve: (doc) => `/${doc.locale}/projects/${doc.slug}`
+  }
+};
+var pageComputedFields = {
   path: {
     type: "string",
     resolve: (doc) => `/${doc._raw.flattenedPath}`
@@ -19,6 +25,15 @@ var Project = defineDocumentType(() => ({
   filePathPattern: "./projects/**/*.mdx",
   contentType: "mdx",
   fields: {
+    locale: {
+      type: "enum",
+      options: ["tr", "en"],
+      required: true
+    },
+    slug: {
+      type: "string",
+      required: true
+    },
     published: {
       type: "boolean"
     },
@@ -40,7 +55,7 @@ var Project = defineDocumentType(() => ({
       type: "string"
     }
   },
-  computedFields
+  computedFields: projectComputedFields
 }));
 var Page = defineDocumentType(() => ({
   name: "Page",
@@ -55,7 +70,7 @@ var Page = defineDocumentType(() => ({
       type: "string"
     }
   },
-  computedFields
+  computedFields: pageComputedFields
 }));
 var contentlayer_config_default = makeSource({
   contentDirPath: "./content",
@@ -98,4 +113,4 @@ export {
   Project,
   contentlayer_config_default as default
 };
-//# sourceMappingURL=compiled-contentlayer-config-S3UCUJVH.mjs.map
+//# sourceMappingURL=compiled-contentlayer-config-T7RVO7SY.mjs.map

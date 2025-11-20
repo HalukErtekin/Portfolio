@@ -1,0 +1,107 @@
+---
+title: Visa Başvuru Yönetim Sistemi (VAMS)
+description: Başvurudan vize basımına kadar her aşamayı yöneten kurumsal ölçekli ilişkisel veri modeli.
+slug: visa-application-management-system
+locale: tr
+date: "2025-02-17"
+published: true
+---
+
+## Genel Bakış
+
+Visa Application Management System (VAMS), konsolosluklar, vize merkezleri ve göçmenlik kurumlarının gerçek hayattaki iş birliğini yansıtan tam bir veritabanı tasarımıdır. Başvuru sahipleri, başvuru merkezleri, konsolosluklar ve finans ekipleri gibi tüm aktörler normalize tablolar, zorunlu yabancı anahtarlar ve iş akışı kurallarıyla modellenir; böylece vize yaşam döngüsü belirsizlik olmadan sorgulanabilir, denetlenebilir ve raporlanabilir.
+
+## Sistem Hedefleri
+
+- Tüm başvuru sahibi, pasaport, doküman ve ödeme verisini tek bir ilişkisel doğruluk kaynağında toplamak.
+- Gönderim, inceleme, karar ve basım olaylarını referans bütünlüğüyle izlemek.
+- Başvuruların merkezler ve konsolosluklar arasında nasıl aktığını modelleyerek tekrar veya anomaliyi önlemek.
+- Analitik, mevzuat kontrolleri ve operasyonel paneller için doğru birleşimler sağlamak.
+
+## Ana Varlıklar ve Sorumluluklar
+
+### Applicant (Başvuru Sahibi)
+
+Kimlik, demografik ve iletişim bilgilerini tutar. Birden çok pasaporta sahip olabilir, birden çok başvuru açabilir ve ücret ödemesi yapabilir. Uyruk, doğum ve iletişim alanları konsolosluk gereksinimleri için zorunludur.
+
+### Passport (Pasaport)
+
+Pasaport numarası (PK), veriliş/bitiş tarihleri, veren makam ve türü saklar. Her kayıt tek bir başvuru sahibine bağlıdır, ancak bir başvuru sahibi zaman içinde sıfır ya da çok pasaporta sahip olabilir.
+
+### Application (Başvuru)
+
+Her vize talebini; kimlikler, seyahat amacı, hedef ülke, gönderim zamanı ve durum geçişleri (Beklemede, İncelemede, Onaylandı, Reddedildi) ile temsil eder. Her başvuru gerekli belgelere, bir gönderim merkezine ve inceleyen konsolosluğa bağlıdır.
+
+### Application Documents (Başvuru Belgeleri)
+
+Vize sınıfı başına gereken belgeleri (isim, açıklama, geçerlilik aralığı) tanımlar. Belgeler, birleşme tabloları üzerinden yeniden kullanılabilir.
+
+### Payment (Ödeme)
+
+Ödeme kimliği, tutar, yöntem, para birimi ve ücret adı ile işlemleri kaydeder. Her ödeme, ödemeyi yapan başvuru sahibine ve parayı alan başvuru merkezine (`Made_To`) referans verir.
+
+### Application Center (Başvuru Merkezi)
+
+İletişim, adres, çalışma saatleri ve randevu kapasitesiyle vize başvuru ofislerini modeller. Hem evrak hem ödeme akışında başvuru sahibi ile konsolosluk arasında aracı rolüdür.
+
+### Consulate (Konsolosluk)
+
+Davaları inceleyen ve nihai kararı veren otoriteyi (PK = Konsolosluk Adı) temsil eder. Yetki alanı, iletişim kanalları ve lokasyonları saklar; birçok başvuru türünü veya ülkeyi yönetebilir.
+
+### Visa Result (Vize Sonucu)
+
+İşlenen her başvuru için resmi sonucu, onay/red, gerekçe ve sonuç kimliğiyle yakalar. Hem inceleyen konsolosluğa hem de karar olumluysa vize kaydına bağlanır.
+
+### Visa (Vize)
+
+Basılmış vizeleri; kimlik, vize türü (turistik/iş/öğrenci vb.), geçerlilik aralığı ve veren konsoloslukla somutlaştırır. Vize ancak onaylanmış bir vize sonucu varsa oluşur; bağımlılık kısıtını pekiştirir.
+
+## İlişki Modelleme
+
+- **Applicant ↔ Passport:** Bire-çok sahiplik; her pasaport tek bir başvuru sahibine aittir.
+- **Applicant ↔ Application:** Başvuru sahipleri birden çok talep açabilir.
+- **Application ↔ Documents:** Çoktan çoğa; gereksinim tabloları üzerinden belge yeniden kullanımına izin verir.
+- **Application Center:** Başvuruları ve ödemeleri alır; giriş ve tahsilat noktasıdır.
+- **Consulate ↔ Application:** Her başvuru bir konsoloslukça incelenir.
+- **Consulate ↔ Visa Result:** Kararlar konsolosluklardan doğar ve aşağı akıştaki vize kayıtlarına referans olur.
+- **Visa Result ↔ Visa:** Vizeler yalnızca onaylı karar sonrası yaratılır; yaşam döngüsü sırasını korur.
+
+Geliştirilmiş ER diyagramı kardinalite ve katılım kısıtlarını yakalayarak verinin taraflar arasında nasıl hareket ettiğini netleştirir.
+
+<div className="mt-6 space-y-2 text-sm text-zinc-400">
+	<Image
+		src="/VAMS/er-diagram.jpg"
+		alt="Visa Application Management System geliştirilmiş ER diyagramı"
+		width={1600}
+		height={900}
+		data-caption="VAMS şemasındaki tüm varlık, ilişki ve kardinaliteleri belgeleyen ayrıntılı ER diyagramı."
+	/>
+</div>
+
+## İlişkisel Şema ve Normalizasyon
+
+Tüm tablolar Üçüncü Normal Form düzeyinde normalize edilmiştir; kısmi ve geçişli bağımlılıklar elimine edilmiştir. Birincil anahtarlar açıkça tanımlıdır, yabancı anahtarlar referans bütünlüğü sağlar ve her öznitelik atomiktir. Bu, tutarlı güncellemeler, verimli join'ler ve yoğun operasyonel yük altında bile anomaliden arınmış raporlama garantiler.
+
+## Sistem Güçleri
+
+- Vize iş akışları için özel tasarlanmış, yüksek normalize ilişkisel çekirdek.
+- Başvuru girişinden karar ve basıma kadar izlenebilir işleme boru hattı.
+- Başvuru sahipleri, merkezler, konsolosluklar ve finans kayıtları arasında net sorumluluk ayrımı.
+- Gerçek dünyadaki hesap verebilirliği yansıtan güçlü yabancı anahtar kısıtları.
+- Analist veya geliştiricilerin hızlı adapte olması için kapsamlı EER dokümantasyonu.
+
+## Olası Geliştirmeler
+
+- Kim neyi ne zaman değiştirdi kaydını tutmak için audit log eklemek.
+- Her mikro aşamayı (gönderim → inceleme → karar → basım) kapsayacak durum takibi genişletmek.
+- Aile veya çok amaçlı seyahat için tek başvuruda birden fazla vize tipine izin vermek.
+- Çevrim içi randevu ve güvenli başvuru sahibi kimlik doğrulamasını entegre etmek.
+- Uçtan uca izlenebilirlik için metadata yanında ikili doküman yüklerini (BLOB/CLOB) saklamak.
+
+## Sonuç
+
+VAMS, uluslararası vize işlemlerinin nüansını yakalayan kurumsal düzeyde veri modellemesini gösteriyor. Proje, gelişmiş ER düşüncesini, disiplinli normalizasyonu ve iş akışı odaklı şemayı; hükümetlerin, konsoloslukların veya büyük vize merkezlerinin minimum değişiklikle benimseyebileceği bir biçimde ortaya koyuyor.
+
+## Özet
+
+VAMS, başvurudan vize basımına kadar tüm aşamaları, normalizasyon ve sıkı referans bütünlüğüyle tutarlı kılan kurumsal ölçekli bir veritabanı tasarımı; böylece başvuru sahibi, merkez, konsolosluk, ödeme ve kararları güvenle izleyebiliyorum.

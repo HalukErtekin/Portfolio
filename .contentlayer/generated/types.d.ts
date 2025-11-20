@@ -26,6 +26,8 @@ export type Project = {
   _id: string
   _raw: Local.RawDocumentData
   type: 'Project'
+  locale: 'tr' | 'en'
+  slug: string
   published?: boolean | undefined
   title: string
   description: string
@@ -35,7 +37,6 @@ export type Project = {
   /** MDX file body */
   body: MDX
   path: string
-  slug: string
 }  
 
 /** Nested types */

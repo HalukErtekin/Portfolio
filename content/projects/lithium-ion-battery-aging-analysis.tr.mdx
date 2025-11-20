@@ -1,0 +1,125 @@
+---
+title: Lityum-İyon Batarya Yaşlanma Analizi
+description: Stanford Energy Control Lab verileriyle kapasite kaybı, empedans artışı ve enerji düşüşünü modelleyen, Random Forest ve doğrusal regresyonla SOH tahmini yapan 23 aylık çalışma.
+slug: lithium-ion-battery-aging-analysis
+locale: tr
+date: "2025-02-17"
+published: true
+---
+
+## Genel Bakış
+
+Bu çalışma, Stanford Energy Control Lab'in 23 aylık verisini kullanarak lityum-iyon batarya kapasite kaybı, empedans artışı ve enerji bozulmasını inceliyor. İleri istatistik, keşifsel veri analizi, anomali tespiti ve makine öğrenmesi birleştirilerek BMS dağıtımları, EV bakımı ve şebeke ölçekli depolama için eyleme dönük Sağlık Durumu (SOH) tahminleri üretiliyor.
+
+## Motivasyon
+
+- Kapasite kaybı, empedans artışı ve termal stres; EV'ler ve sabit depolama için riski yükseltiyor.
+- Doğru SOH kestirimi, garanti maruziyeti, Kalan Faydalı Ömür planlaması ve kimya Ar-Ge'sini bilgilendiriyor.
+- Boru hattı gerçek sürüş/şarj desenleriyle eğitildiğinden, saha verisine dayalı yüksek doğrulukta öngörüler üretiyor.
+
+## Veri Seti
+
+Modeller iki tamamlayıcı kaynaktan besleniyor:
+
+1. **Çevrim (cycling) verisi:** CC/CV şarj ve UDDS deşarj profilleri boyunca voltaj, akım, sıcaklık, kapasite, adım indeksi ve test zamanını yakalar.
+2. **Tanısal veri:** Periyodik kapasite testleri, EIS ve HPPC oturumları; günlük çevrimlerin kaçırabileceği uzun vadeli bozulma eğilimlerini açığa çıkarır.
+
+## Keşifsel Veri Analizi
+
+- **Voltaj ve Akım:** Şarj ~4.20 V seviyesinde dengelenirken akım kontrol altında kalır.
+- **Kapasite Düşüşü:** Erken formasyon kaybı keskin bir düşüş olarak görülür, ardından kademeli stabilizasyon gelir.
+- **Sıcaklık:** Okumalar ~23 °C civarında kümelenir, yüksek yük olaylarında sıçrar.
+- **Korelasyon:** Deşarj Enerjisi ↔ Test Zamanı ve Voltaj ↔ Adım İndeksi gibi güçlü ilişkiler özellik mühendisliğine rehberlik eder.
+- **Anomali Tespiti:** Isolation Forest, eğitim öncesi çıkarılan anormal voltaj düşüşlerini, termal sıçramaları ve düzensiz deşarjları işaretler.
+
+<div className="mt-6 flex flex-col gap-8 text-sm text-zinc-400">
+	<div className="space-y-2">
+		<Image
+			src="/battery_aging_analysis/correlation-heatmap.png"
+			alt="Ana çevrim değişkenleri arasındaki korelasyon ısı haritası"
+			width={1200}
+			height={900}
+			data-caption="Özellik seçimini yönlendiren voltaj, zaman ve enerji etkileşimlerini gösteren ısı haritası."
+		/>
+	</div>
+	<div className="space-y-2">
+		<Image
+			src="/battery_aging_analysis/outlier-detection.png"
+			alt="Isolation Forest aykırı değer tespiti grafiği"
+			width={1200}
+			height={900}
+			data-caption="Eğitimden önce çıkarılan anormal çevrimleri vurgulayan Isolation Forest taraması."
+		/>
+	</div>
+</div>
+
+## Makine Öğrenmesi Boru Hattı
+
+İki tahmin görevi modeli yönlendiriyor:
+
+1. **Sağlık Durumu (SOH) Tahmini**
+2. **Deşarj Enerjisi (Wh) Tahmini**
+
+Özellikler, fiziksel anlamı net olan sinyallere odaklanarak çevrim ve tanısal akışlardan geliyor.
+
+### SOH Tahmini (Random Forest)
+
+- **Girdiler:** Test zamanı, voltaj, akım ve şarj enerjisi.
+- **Başarım:** R² = 0.9875, MAE = 0.14, RMSE = 0.24.
+- On katlı çapraz doğrulama genelleme gücünü onaylıyor; model gerçek zamanlı BMS entegrasyonuna hazır.
+
+<div className="mt-6 space-y-2 text-sm text-zinc-400">
+	<Image
+		src="/battery_aging_analysis/soh-actual-vs-predicted.png"
+		alt="SOH gerçek vs tahmin grafiği"
+		width={1600}
+		height={900}
+		data-caption="Random Forest tahminleri, ölçülen SOH'u ortalama %0.2'nin altında hata ile izliyor."
+	/>
+</div>
+
+### Enerji Tahmini (Doğrusal Regresyon)
+
+Deşarj enerjisi, test zamanı ve adım indeksinin doğrusal birleşimiyle modellenir:
+
+```
+E_discharge = β0 + β1 * TestTime + β2 * StepIndex
+```
+
+- **R²:** 0.7321
+- **RMSE:** 3.04
+- **MAE:** 2.37
+
+Bu hafif tahminleyici, gömülü sistemler için hızlı enerji öngörüleri sağlar.
+
+### Kümeleme Analizi
+
+K-Means, çevrimleri üç bozulma profiline ayırır:
+
+- **Küme 1 — Sağlıklı:** En yüksek kapasite, en düşük sıcaklık varyansı.
+- **Küme 2 — Orta Yaşlanma:** Öngörülebilir voltaj davranışı ve orta seviyede bozulma.
+- **Küme 3 — İleri Yaşlanma:** Sık voltaj düşüşleri, termal istikrarsızlık ve minimal kapasite.
+
+Bu kümeler, hedefli bakım ve değişim stratejilerini destekler.
+
+## Önemli Bulgular
+
+- Random Forest SOH modeli, neredeyse kusursuz doğrulukla yayımlanmış kıyasları aşıyor.
+- Test zamanı, voltaj, akım ve adım indeksi baskın öngördürücüler olarak öne çıkıyor.
+- K-Means, proaktif kararlar için belirgin bozulma davranış gruplarını ortaya çıkarıyor.
+- Isolation Forest, veri kalitesini ve modele güveni artırıyor.
+- Küçük sıcaklık değişimleri bile SOH düşüşüyle güçlü biçimde ilişkili; termal yönetim ihtiyacını vurguluyor.
+
+## Pratik Uygulamalar
+
+- **BMS:** Gerçek zamanlı SOH ve Kalan Faydalı Ömür tahminleri, otomatik bozulma uyarıları.
+- **EV Filoları:** Öngörülü bakım, menzil doğruluğu iyileştirmeleri ve garanti optimizasyonu.
+- **Ar-Ge ve Üretim:** Erken çevrim kayıplarının tanısı, yeni kimya değerlendirmesi, iyileştirilmiş formasyon süreçleri.
+
+## Sonuç
+
+İstatistiksel analiz, EDA, Random Forest, doğrusal regresyon, kümeleme ve anomali tespiti birleşimi; lityum-iyon batarya yaşlanmasına tam bir bakış sunuyor. SOH tahminlerinde R² = 0.9875 ile boru hattı, veri odaklı tanıların EV ve endüstriyel enerji depolamayı nasıl dönüştürebileceğini gösterirken gelecekteki öngörücü batarya analitiği için sağlam bir temel atıyor.
+
+## Özet
+
+23 aylık çevrim ve tanısal veriyi içeri alıp kapasite kaybı ve enerji bozulmasını yüksek doğruluklu Random Forest ve regresyon tabanlarıyla modelleyen; riskli çevrimleri K-Means ve Isolation Forest ile yakalayan kapsamlı bir batarya yaşlanma analizi geliştirdim.

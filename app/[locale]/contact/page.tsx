@@ -1,67 +1,96 @@
 import type { Metadata } from "next";
 import { Github, Mail, Twitter } from "lucide-react";
 import Link from "next/link";
-import { Navigation } from "../components/nav";
-import { Card } from "../components/card";
+import { Navigation } from "../../components/nav";
+import { Card } from "../../components/card";
+import { Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionary";
 
-const contactDescription =
-	"Haluk Ertekin ile Twitter, e-posta veya GitHub üzerinden iletişime geçin.";
+const siteUrl = "https://halukertekin.com";
 
-export const metadata: Metadata = {
-	title: "İletişim | Haluk Ertekin",
-	description: contactDescription,
-	openGraph: {
-		title: "İletişim | Haluk Ertekin",
-		description: contactDescription,
-		url: "https://halukertekin.com/contact",
-		siteName: "Haluk Ertekin",
-		locale: "tr_TR",
-		type: "website",
-	},
-	twitter: {
-		card: "summary",
-		title: "İletişim | Haluk Ertekin",
-		description: contactDescription,
-		creator: "@haluk_ertekin",
-	},
-	alternates: {
-		canonical: "https://halukertekin.com/contact",
-	},
-};
+export async function generateMetadata({
+	params,
+}: {
+	params: { locale: Locale };
+}): Promise<Metadata> {
+	const locale = params.locale;
+	const dictionary = getDictionary(locale);
+	const title =
+		locale === "tr" ? "İletişim | Haluk Ertekin" : "Contact | Haluk Ertekin";
+	const description = dictionary.contact.description;
+	const base = `${siteUrl}/${locale}/contact`;
 
-const socials = [
-	{
-		icon: <Twitter size={20} />,
-		href: "https://twitter.com/haluk_ertekin",
-		label: "Twitter",
-		handle: "@haluk_ertekin",
-	},
-	{
-		icon: <Mail size={20} />,
-		href: "mailto:halukertekin1907@gmail.com",
-		label: "Email",
-		handle: "halukertekin1907@gmail.com",
-	},
-	{
-		icon: <Github size={20} />,
-		href: "https://github.com/HalukErtekin",
-		label: "Github",
-		handle: "HalukErtekin",
-	},
-];
+	return {
+		title,
+		description,
+		openGraph: {
+			title,
+			description,
+			url: base,
+			siteName: dictionary.site.name,
+			locale: locale === "tr" ? "tr_TR" : "en_US",
+			type: "website",
+		},
+		twitter: {
+			card: "summary",
+			title,
+			description,
+			creator: "@haluk_ertekin",
+		},
+		alternates: {
+			canonical: base,
+			languages: {
+				en: `${siteUrl}/en/contact`,
+				tr: `${siteUrl}/tr/contact`,
+			},
+		},
+	};
+}
 
-export default function Example() {
+export default async function ContactPage({
+	params,
+}: {
+	params: { locale: Locale };
+}) {
+	const locale = params.locale;
+	const dictionary = getDictionary(locale);
+
+	const socials = [
+		{
+			icon: <Twitter size={20} />,
+			href: "https://twitter.com/haluk_ertekin",
+			label: "Twitter",
+			handle: "@haluk_ertekin",
+		},
+		{
+			icon: <Mail size={20} />,
+			href: "mailto:halukertekin1907@gmail.com",
+			label: "Email",
+			handle: "halukertekin1907@gmail.com",
+		},
+		{
+			icon: <Github size={20} />,
+			href: "https://github.com/HalukErtekin",
+			label: "Github",
+			handle: "HalukErtekin",
+		},
+	];
+
 	return (
 		<div className=" bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0">
-			<Navigation />
+			<Navigation
+				locale={locale}
+				labels={dictionary.nav}
+				switcher={dictionary.switcher}
+			/>
 			<div className="container flex items-center justify-center min-h-screen px-4 mx-auto">
 				<div className="w-full space-y-12">
 					<div className="max-w-2xl mx-auto text-center space-y-4">
 						<h1 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
-							Contact
+							{dictionary.contact.title}
 						</h1>
 						<p className="text-sm text-zinc-400 sm:text-base">
-							{contactDescription}
+							{dictionary.contact.description}
 						</p>
 					</div>
 					<div className="grid w-full grid-cols-1 gap-8 mx-auto sm:grid-cols-3 lg:gap-16">
@@ -71,7 +100,7 @@ export default function Example() {
 									href={s.href}
 									target="_blank"
 									rel="noreferrer"
-									aria-label={`${s.label} ile iletişime geç`}
+									aria-label={`${s.label}`}
 									className="p-4 relative flex flex-col items-center gap-4 duration-700 group md:gap-8 md:py-24  lg:pb-48  md:p-16"
 								>
 									<span

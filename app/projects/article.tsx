@@ -1,21 +1,23 @@
 import type { Project } from "@/.contentlayer/generated";
 import Link from "next/link";
-import { Eye, View } from "lucide-react";
+import { Eye } from "lucide-react";
+import { Locale } from "@/i18n/config";
 
 type Props = {
 	project: Project;
 	views: number;
+	locale: Locale;
 };
 
-export const Article: React.FC<Props> = ({ project, views }) => {
+export const Article: React.FC<Props> = ({ project, views, locale }) => {
 	return (
-		<Link href={`/projects/${project.slug}`}>
+		<Link href={`/${locale}/projects/${project.slug}`}>
 			<article className="p-4 md:p-8">
 				<div className="flex justify-between gap-2 items-center">
 					<span className="text-xs duration-1000 text-zinc-200 group-hover:text-white group-hover:border-zinc-200 drop-shadow-orange">
 						{project.date ? (
 							<time dateTime={new Date(project.date).toISOString()}>
-								{Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
+								{Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(
 									new Date(project.date),
 								)}
 							</time>

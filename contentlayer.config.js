@@ -5,7 +5,15 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 /** @type {import('contentlayer/source-files').ComputedFields} */
-const computedFields = {
+const projectComputedFields = {
+	path: {
+		type: "string",
+		resolve: (doc) => `/${doc.locale}/projects/${doc.slug}`,
+	},
+};
+
+/** @type {import('contentlayer/source-files').ComputedFields} */
+const pageComputedFields = {
 	path: {
 		type: "string",
 		resolve: (doc) => `/${doc._raw.flattenedPath}`,
@@ -22,6 +30,15 @@ export const Project = defineDocumentType(() => ({
 	contentType: "mdx",
 
 	fields: {
+		locale: {
+			type: "enum",
+			options: ["tr", "en"],
+			required: true,
+		},
+		slug: {
+			type: "string",
+			required: true,
+		},
 		published: {
 			type: "boolean",
 		},
@@ -43,7 +60,7 @@ export const Project = defineDocumentType(() => ({
 			type: "string",
 		},
 	},
-	computedFields,
+	computedFields: projectComputedFields,
 }));
 
 export const Page = defineDocumentType(() => ({
@@ -59,7 +76,7 @@ export const Page = defineDocumentType(() => ({
 			type: "string",
 		},
 	},
-	computedFields,
+	computedFields: pageComputedFields,
 }));
 
 export default makeSource({

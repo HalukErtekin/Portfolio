@@ -1,0 +1,121 @@
+---
+title: Güvenli Web Tabanlı Mesajlaşma Sistemi
+description: Kultur Technologies için Go backend, duyarlı web arayüzü ve PostgreSQL ile AES-256 şifreli kurumsal mesajlaşma.
+slug: secure-business-messaging
+locale: tr
+date: "2025-02-17"
+published: true
+---
+
+## Genel Bakış
+
+Kultur Technologies için geliştirilen bu full-stack platform, tarayıcı tabanlı mesajlaşmayı tamamen kurum içinde tutarak gizlilik, bütünlük ve gerçek zamanlı iş akışı gereksinimlerini karşılıyor. Go API katmanı AES-256 şifreleme uygular, PostgreSQL tüm mesajları ve anahtar metadatasını saklar, HTML/CSS/JS arayüzü masaüstü ve mobilde uyumlu, akıcı bir sohbet deneyimi sunar.
+
+<div className="flex flex-col gap-8">
+	<Image
+		src="/web_based_secure_messaging_system/web-ui-1.png"
+		alt="Güvenli mesajlaşma landing sayfası ve ana yerleşim"
+		width={1200}
+		height={800}
+		data-caption="Kultur Technologies'in güvenli mesajlaşma yığınına giriş deneyimi."
+	/>
+	<Image
+		src="/web_based_secure_messaging_system/web-ui-2.png"
+		alt="Gerçek zamanlı mesajlaşma arayüzü"
+		width={1200}
+		height={800}
+		data-caption="Masaüstü ve mobil için hızlandırılmış oturum açma / kayıt akışı."
+	/>
+</div>
+
+<div className="flex flex-col gap-4 text-sm text-zinc-400">
+	<Image
+		src="/web_based_secure_messaging_system/web-ui-3.png"
+		alt="Medya yükleme ve önizleme akışı"
+		width={1600}
+		height={900}
+		data-caption="Statik HTML/CSS/JS istemcisinin işlediği şifreli medya hattını gösteren duyarlı sohbet penceresi."
+	/>
+</div>
+
+## Motivasyon
+
+- Kurumsal sohbet kanallarını hedef alan siber tehditler ve veri sızıntısı riskleri artıyor.
+- Ticari SaaS araçları pahalı, kapalı ve çoğu zaman esnek değil.
+- Amaç, uçtan uca şifreleme ve özelleştirilebilir bir web deneyimiyle kurum kontrolünde bir mesajlaşma yığını kurmaktı.
+
+## Proje Hedefleri
+
+- AES-256 ile güvenli mesajlaşma tasarlamak
+- Gerçek zamanlı metin ve multimedya paylaşımını desteklemek
+- Güçlü kimlik doğrulama ve erişim kontrolü uygulamak
+- Ayrılmış anahtar saklama ile yapılandırılmış PostgreSQL şeması modellemek
+- Kullanılabilirliği optimize eden duyarlı bir ön yüz sağlamak
+
+## Sistem Mimarisi
+
+### Frontend (HTML5/CSS3/JS)
+
+- Giriş / kayıt akışları, sohbet paneli, medya yükleme / önizleme
+- Mobil ve masaüstünde duyarlı yerleşimler, anlık mesaj render'ı
+
+### Backend (Go)
+
+- Oturumları ve token doğrulamayı yönetir
+- Mesajları yönlendirir, kuyruğa alır ve Go eşzamanlılığından yararlanır
+- `crypto/aes` + `crypto/cipher` ile AES-256 CBC şifreleme uygular
+- Multimedya kodlama, API uçları ve hata yönetimini ele alır
+
+### Veritabanı (PostgreSQL)
+
+- Karma kimlik bilgileriyle kullanıcı profillerini saklar
+- Şifreli mesajları, zaman damgalarını, gönderici/alıcı kimliklerini kaydeder
+- 256 bit anahtarları ve IV metadatasını ayrılmış MessageKeys tablosunda tutar
+- ER modeli, referans bütünlüğü için Users, Messages ve MessageKeys üzerine kuruludur
+
+<div className="flex flex-col gap-4 text-sm text-zinc-400">
+	<Image
+		src="/web_based_secure_messaging_system/activity-diagram.png"
+		alt="Kimlik doğrulama, şifreleme ve teslim aşamalarını gösteren aktivite diyagramı"
+		width={1600}
+		height={900}
+		data-caption="Go servisleri, PostgreSQL depolama ve web istemcisi iş akışlarını bağlayan aktivite diyagramı."
+	/>
+</div>
+
+## Kriptografik Akış
+
+1. Güvenli 256 bit anahtar ve rastgele IV üret.
+2. Mesaj yükünü AES-256 CBC ile şifrele, Base64 kodla.
+3. Şifreli metni PostgreSQL'e yaz, anahtarları ayrı tabloda sakla.
+4. Yalnızca yetkili kullanıcılar için çöz; Playfair veya Vigenere gibi tarihsel şifreler yetersiz güç nedeniyle reddedildi.
+
+<div className="flex flex-col gap-4 text-sm text-zinc-400">
+	<Image
+		src="/web_based_secure_messaging_system/aes-diagram.png"
+		alt="Projede kullanılan AES-256 blok diyagramı"
+		width={1200}
+		height={800}
+		data-caption="Go'da uygulanan AES-256 CBC tur yapısını belgeleyen referans diyagram."
+	/>
+</div>
+
+## Çekirdek Özellikler
+
+- **Kimlik Doğrulama:** Karma kimlik bilgilerini doğrular, oturumları sürdürür, giriş kontrollerini uygular.
+- **Gerçek Zamanlı Mesajlaşma:** Yetkili kullanıcılar arasında doğrudan metin/multimedya alışverişi.
+- **Multimedya Paylaşımı:** Görselleri sunucu tarafında şifreler ve alıcılar için çözer.
+- **Anahtar Yönetimi:** Mesaj anahtarlarını ayırarak yetkisiz erişime karşı ek savunma katmanı oluşturur.
+- **Veritabanı Bütünlüğü:** Her mesajı hem kullanıcı hem de anahtar kayıtlarına bağlayarak izlenebilirliği sağlar.
+
+## Uygulama Notları
+
+- Go backend; mesaj gönderme/alma, kimlik doğrulama ve dosya yükleme uçları sunar.
+- Ön yüz sayfaları (`Auth.html`, `Chat.html`) sohbeti canlı tutmak için asenkron güncellemeleri yönetir.
+- Akış: kullanıcı giriş yapar → backend JWT/oturum üretir → mesajlar şifrelenir ve saklanır → yetkili istemciler talep üzerinde çözer.
+
+## Test ve Doğrulama
+
+- **Kimlik Doğrulama:** Geçerli/geçersiz giriş durumları ve kaba kuvvet korumaları doğrulandı.
+- **Mesajlaşma Kararlılığı:** Eşzamanlı mesaj alışverişlerinde düşük gecikme korundu.
+- **AES Doğrulaması:** Hatalı anahtar/IV durumlarında hata yönetimi ve şifreleme/şifre çözme doğruluğu test edildi.

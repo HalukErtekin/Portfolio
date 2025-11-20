@@ -1,0 +1,270 @@
+---
+title: Hayvansal Esinli Robot Yılan
+description: Çok servo destekli, sensör füzyonlu, canlı telemetri ve video akışına sahip Arduino + mobil robotik yılan platformu.
+slug: animal-inspired-robot-snake
+locale: tr
+date: "2025-02-17"
+published: true
+---
+
+## Genel Bakış
+
+Beş servo gövde, Arduino tabanlı kontrol, HC-SR04 ve DHT11 sensörleri, ESP32-CAM yayını, HC-06 Bluetooth bağlantısı ve Android eşlik uygulamasıyla modüler, biyolojiden esinlenen bir robot yılan tasarlandı. Sistem, doğal sürünmeyi taklit ederken çevresini algılayan uzaktan kontrollü bir platform oluşturuyor.
+
+## Motivasyon
+
+Yılanlar dar alanlardan geçme, engebeli zeminde ilerleme ve uzuvsuz dengede ustadır. Bu kabiliyetleri kopyalamak; arama-kurtarma, boru hattı denetimi, gözetleme, çevresel izleme ve eğitim senaryoları için taşınabilir, düşük maliyetli, modüler bir platform sağlar.
+
+## Proje Hedefleri
+
+- Gerçekçi S-eğrisi hareketi üretebilen çok segmentli gövde tasarlamak.
+- Servo senkronizasyonunu Bluetooth komutlarıyla ileri/geri/yan hareketlerde uyarlamak.
+- Ultrasonik mesafe, sıcaklık/nem ve kamera verilerini birleştirmek.
+- HC-06 ve özel Android uygulamasıyla güvenilir kablosuz kontrol sağlamak.
+- Sensör okumalarını, video akışlarını ve acil durdurma kontrollerini gerçek zamanlı yüzeye taşımak.
+
+<div className="grid gap-6 md:grid-cols-2 text-sm text-zinc-400">
+	<div className="space-y-2">
+		<Image
+			src="/Robot_Snake/activity-flow.png"
+			alt="Girişten robot kontrolüne yüksek seviye aktivite akışı"
+			width={1200}
+			height={850}
+			className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+			data-caption="Kullanıcı kimlik doğrulaması, komut iletimi ve acil durdurma döngüsünü gösteren akış."
+		/>
+	</div>
+	<div className="space-y-2">
+		<Image
+			src="/Robot_Snake/deployment-diagram.png"
+			alt="Mobil uygulama, Firebase ve robot donanımı arasında dağıtım diyagramı"
+			width={1200}
+			height={850}
+			className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+			data-caption="Android uygulaması, Firebase backend ve Arduino donanımını gösteren dağıtım diyagramı."
+		/>
+	</div>
+</div>
+
+## Sistem Bileşenleri ve Mimari
+
+- **Servo Motorlar (1-5):** Omurga boyunca bükülme ve dalga formu hareket sağlar.
+- **Arduino Uno:** PWM çıkışlarını sürer, sensörleri okur, kontrol döngüsünü koordine eder.
+- **HC-SR04:** Baş kısmında engel farkındalığı için konumlandırılmıştır.
+- **DHT11:** Sıcaklık ve nem verisini uygulamaya aktarır.
+- **ESP32-CAM:** Operatörlere durum bilgisi kazandırmak için canlı video iletir.
+- **HC-06 Bluetooth:** Mobil cihazlara düşük gecikmeli komut ve telemetri bağlantısı sağlar.
+- **Güç Yönetimi:** Pil dağıtımı, voltaj regülasyonu ve koruma devrelerini yönetir.
+
+## Yazılım Mimarisi
+
+### Arduino Yazılımı
+
+- Beş servo için PWM hız/açı profillerini hesaplar.
+- HC-SR04 mesafelerini işler, otomatik dur/kaçın manevralarını tetikler.
+- DHT11 verisini örnekler ve Bluetooth paketlerine ekler.
+- ESP32-CAM ve HC-06 bağlantılarını fail-safe mantığıyla koordine eder.
+
+```cpp
+#include <SoftwareSerial.h>
+#include <DHT.h>
+#include <Servo.h>
+
+#define trigPin 3
+#define echoPin 2
+#define DHTPIN 4
+
+SoftwareSerial BTSerial(7, 6); // RX, TX
+
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+
+Servo s1, s2, s3, s4, s5;
+
+long duration;
+long distance;
+
+int counter = 0;
+float lag = 5.712;
+float amplitude = 40;
+float frequency = 1;
+int offset = 6;
+int delayTime = 1;
+int startPause = 500;
+
+void setup() {
+	Serial.begin(9600);
+	BTSerial.begin(9600);
+
+	pinMode(trigPin, OUTPUT);
+	pinMode(echoPin, INPUT);
+
+	s1.attach(8);
+	s2.attach(9);
+	s3.attach(10);
+	s4.attach(11);
+	s5.attach(12);
+
+	dht.begin();
+	delay(3000);
+
+	s1.write(90 + offset + amplitude * cos(5 * lag));
+	s2.write(90 + offset + amplitude * cos(4 * lag));
+	s3.write(90 + offset + amplitude * cos(3 * lag));
+	s4.write(90 + offset + amplitude * cos(2 * lag));
+	s5.write(90 + amplitude * cos(lag));
+
+	delay(startPause);
+}
+
+void loop() {
+	digitalWrite(trigPin, LOW);
+	delayMicroseconds(2);
+	digitalWrite(trigPin, HIGH);
+	delayMicroseconds(10);
+	digitalWrite(trigPin, LOW);
+
+	duration = pulseIn(echoPin, HIGH);
+	distance = (duration / 2) * 0.0343;
+
+	float temperature = dht.readTemperature();
+	float humidity = dht.readHumidity();
+
+	String dataString =
+		"Distance: " + String(distance) + " cm\n" +
+		"Temperature: " + String(temperature) + " degC\n" +
+		"Humidity: " + String(humidity) + "%\n";
+
+	Serial.println(dataString);
+	BTSerial.print(dataString);
+
+	delay(2000);
+}
+```
+
+```cpp
+// Send data via Bluetooth
+BTSerial.print(dataString);
+
+// Read from HC-06 for servo control
+if (BTSerial.available()) {
+	int count = 0;
+	char receivedChar = BTSerial.read();
+
+	// Control servos based on received character
+	if (receivedChar == 'w') {
+		delay(startPause);
+		while (count < 5) {
+			moveForward();
+			count++;
+		}
+		count = 0;
+	} else if (receivedChar == 's') {
+		delay(startPause);
+		while (count < 5) {
+			moveBackward();
+			count++;
+		}
+		count = 0;
+	}
+}
+
+delay(2000); // Set measurement interval to 2 seconds
+
+void moveForward() {
+	for (counter = 0; counter < 360; counter += 1) {
+		delay(delayTime);
+		s1.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 5 * lag));
+		s2.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 4 * lag));
+		s3.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 3 * lag));
+		s4.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 2 * lag));
+		s5.write(90 + amplitude * cos(frequency * counter * PI / 180 + lag));
+	}
+}
+
+void moveBackward() {
+	for (counter = 360; counter > 0; counter -= 1) {
+		delay(delayTime);
+		s1.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 5 * lag));
+		s2.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 4 * lag));
+		s3.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 3 * lag));
+		s4.write(90 + offset + amplitude * cos(frequency * counter * PI / 180 + 2 * lag));
+		s5.write(90 + amplitude * cos(frequency * counter * PI / 180 + lag));
+	}
+}
+```
+
+### Android Mobil Uygulaması (Flutter/Java)
+
+- Hareket butonları (ileri/geri/sol/sağ/kamera eğimi) sağlar.
+- Sensör verileri ve canlı video akışlarını gösterir.
+- Firebase ile kimlik doğrulama, tercih saklama ve loglama yapar.
+- Düşük gecikmeli Bluetooth iletişimi ve acil durdurma kontrolü içerir.
+
+### Backend / Firebase
+
+- Kullanıcı hesaplarını ve token'ları yönetir.
+- Tercihleri ve oturum loglarını güvenli erişim kontrolleriyle saklar.
+- Gerçek zamanlı veriyi mobil istemciyle senkronize eder.
+
+<div className="mt-6 space-y-2 text-sm text-zinc-400">
+	<Image
+		src="/Robot_Snake/sequence-diagram.png"
+		alt="Kullanıcı, uygulama, sunucu, Arduino ve sensörler arasında sıralama diyagramı"
+		width={1600}
+		height={900}
+		className="w-full rounded-2xl border border-zinc-800 bg-zinc-900"
+		data-caption="Kullanıcı, mobil uygulama, Firebase, Arduino ve yerleşik sensörler arasındaki mesaj akışını gösteren sıralama diyagramı."
+	/>
+</div>
+
+<div className="mt-8 space-y-2 text-sm text-zinc-400">
+	<div className="relative w-full overflow-hidden rounded-2xl border border-zinc-800 bg-black">
+		<div className="relative" style={{ paddingTop: "56.25%" }}>
+			<iframe
+				className="absolute inset-0 h-full w-full"
+				src="https://www.youtube.com/embed/xVInvh3DBsw?start=5"
+				title="Robot yılan demosu"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+				referrerPolicy="strict-origin-when-cross-origin"
+				allowFullScreen
+			/>
+		</div>
+	</div>
+	<p>Çok servo hareket, canlı video akışı ve mobil kontrol döngüsünü gösteren saha testi.</p>
+</div>
+
+## Fonksiyonel Modüller
+
+- **Hareket:** Sinüzoidal servo profilleriyle S-eğrisi hareket üretir, hız/yön değişimini anında uygular.
+- **Engel Algılama:** Ultrasonik okumaları yorumlayarak otomatik durdurma veya uyarı üretir.
+- **Çevresel İzleme:** DHT11 sıcaklık/nem güncellemelerini sürekli gönderir.
+- **Kullanıcı Arayüzü:** Sensör, video ve kontrol panellerini tek ekranda birleştirir.
+- **Kablosuz İletişim:** Tepkisel uzaktan kontrol için şifreli HC-06 paketleri kullanır.
+
+## SRS Öne Çıkanlar
+
+- **Fonksiyonel:** Kimlik doğrulama, gerçek zamanlı hareket kontrolü, kararlı Bluetooth bağlantısı, sensör telemetrisi, acil durdurma.
+- **Fonksiyonel Olmayan:** Düşük gecikme, yüksek bağlantı güvenilirliği, sezgisel UI, şifreli iletişim, modüler kod tabanı.
+- **Güvenlik:** Elektriksel/termal koruma, güvenli pil şarjı, yuvarlatılmış mekanik kenarlar.
+
+## Sonuçlar ve Değerlendirme
+
+- **Hareket:** Dar boşluklar ve engebeli yüzeylerde gerçekçi sürünme sağladı.
+- **Sensör Doğruluğu:** HC-SR04 minimum yanlış pozitif ile engel tespiti yaptı; DHT11 laboratuvar koşullarında kararlı kaldı.
+- **Kablosuz Performans:** Bluetooth bağlantısı komutlara karşı kalıcı ve duyarlı kaldı.
+- **UI Deneyimi:** Android uygulaması sensör ve video verisini akıcı iletirken Firebase kimlik doğrulaması kesintisiz çalıştı.
+
+## Kullanım Alanları
+
+- Arama-kurtarma, tehlikeli denetim ve endüstriyel boru hattı gözetimi.
+- Çevresel gözlem, askeri keşif ve güvenlik.
+- STEM eğitimi, biyomimetik araştırmalar ve sürü robotik deneyleri.
+
+## Sonuç
+
+Servolar, sensörler, kamera ve güç bileşenlerini; Arduino kontrol algoritmaları, Bluetooth iletişimi, Android UI ve Firebase SRS ile birleştirerek doğadan ilham alan robotikte gerçekçi hareket, durum farkındalığı ve uzaktan kontrol sağlandı. Gelecek sürümler otonom gezinme, sürü koordinasyonu veya yapay zeka destekli karar verme ile genişletilebilir.
+
+## Özet
+
+Beş servo, Arduino kontrol, HC-SR04, DHT11, ESP32-CAM, HC-06 Bluetooth ve Flutter tabanlı mobil uygulamayı bir araya getirerek S-eğrisi hareketi ve çevresel farkındalığı olan, kurtarma görevlerinden eğitime kadar hazır bir yılan robotu geliştirdim.

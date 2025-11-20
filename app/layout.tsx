@@ -66,6 +66,10 @@ export const metadata: Metadata = {
 	},
 	alternates: {
 		canonical: siteUrl,
+		languages: {
+			en: `${siteUrl}/en`,
+			tr: `${siteUrl}/tr`,
+		},
 	},
 	verification: {
 		google: "nJ_CjIO8M59UtNVB-uEGWsrwRiHEax5fRJXQmmt2VK4",
@@ -91,6 +95,11 @@ const structuredData = [
 		url: siteUrl,
 		inLanguage: "tr",
 		description: siteDescription,
+		potentialAction: {
+			"@type": "SearchAction",
+			target: `${siteUrl}/search?q={search_term_string}`,
+			"query-input": "required name=search_term_string",
+		},
 	},
 	{
 		"@context": "https://schema.org",
@@ -103,6 +112,10 @@ const structuredData = [
 			"https://github.com/HalukErtekin",
 			"https://twitter.com/haluk_ertekin",
 		],
+		address: {
+			"@type": "PostalAddress",
+			addressCountry: "TR",
+		},
 	},
 ];
 

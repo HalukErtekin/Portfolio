@@ -2,8 +2,28 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import { LanguageSwitcher } from "./language-switcher";
+import { Locale } from "@/i18n/config";
 
-export const Navigation: React.FC = () => {
+type NavigationProps = {
+	locale: Locale;
+	labels: {
+		projects: string;
+		about: string;
+		contact: string;
+	};
+	switcher: {
+		label: string;
+		tr: string;
+		en: string;
+	};
+};
+
+export const Navigation: React.FC<NavigationProps> = ({
+	locale,
+	labels,
+	switcher,
+}) => {
 	const ref = useRef<HTMLElement>(null);
 	const [isIntersecting, setIntersecting] = useState(true);
 
@@ -25,31 +45,34 @@ export const Navigation: React.FC = () => {
 						? "bg-zinc-900/0 border-transparent"
 						: "bg-zinc-900/500  border-zinc-800 "
 				}`}
-			>
+		>
 				<div className="container flex flex-row-reverse items-center justify-between p-6 mx-auto">
-					<div className="flex justify-between gap-8">
-						<Link
-							href="/projects"
-							className="duration-200 text-zinc-400 hover:text-zinc-100"
-						>
-							Projects
-						</Link>
-						<Link
-							href="/about"
-							className="duration-200 text-zinc-400 hover:text-zinc-100"
-						>
-							About
-						</Link>
-						<Link
-							href="/contact"
-							className="duration-200 text-zinc-400 hover:text-zinc-100"
-						>
-							Contact
-						</Link>
+					<div className="flex items-center gap-6">
+						<LanguageSwitcher locale={locale} labels={switcher} />
+						<div className="flex justify-between gap-6">
+							<Link
+								href={`/${locale}/projects`}
+								className="duration-200 text-zinc-400 hover:text-zinc-100"
+							>
+								{labels.projects}
+							</Link>
+							<Link
+								href={`/${locale}/about`}
+								className="duration-200 text-zinc-400 hover:text-zinc-100"
+							>
+								{labels.about}
+							</Link>
+							<Link
+								href={`/${locale}/contact`}
+								className="duration-200 text-zinc-400 hover:text-zinc-100"
+							>
+								{labels.contact}
+							</Link>
+						</div>
 					</div>
 
 					<Link
-						href="/"
+						href={`/${locale}`}
 						className="duration-200 text-zinc-300 hover:text-zinc-100"
 					>
 						<ArrowLeft className="w-6 h-6 " />
