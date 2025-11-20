@@ -3,6 +3,12 @@
 import Script from "next/script";
 import { useEffect, useState } from "react";
 
+declare global {
+	interface Window {
+		__splineViewerLoaded?: boolean;
+	}
+}
+
 type HeroSplineProps = {
 	className?: string;
 	scene?: string;
@@ -11,24 +17,27 @@ type HeroSplineProps = {
 const SPLINE_SCRIPT_SRC =
 	"https://unpkg.com/@splinetool/viewer@1.11.9/build/spline-viewer.js";
 const DEFAULT_SCENE =
-	"https://prod.spline.design/3Z4WBiarjpvTKQG4/scene.splinecode";
+	"https://prod.spline.design/4ncgcjig7lKtPhyA/scene.splinecode";
 
 export default function HeroSpline({
 	className = "",
 	scene = DEFAULT_SCENE,
 }: HeroSplineProps) {
-	const [mounted, setMounted] = useState(false);
 	const [viewerReady, setViewerReady] = useState(false);
 
 	useEffect(() => {
-		setMounted(true);
+		if (typeof window === "undefined") return;
+		if (window.__splineViewerLoaded) {
+			setViewerReady(true);
+		}
 	}, []);
 
-	const handleScriptReady = () => setViewerReady(true);
-
-	if (!mounted) {
-		return null;
-	}
+	const handleScriptReady = () => {
+		if (typeof window !== "undefined") {
+			window.__splineViewerLoaded = true;
+		}
+		setViewerReady(true);
+	};
 
 	return (
 		<>
@@ -37,13 +46,11 @@ export default function HeroSpline({
 				type="module"
 				src={SPLINE_SCRIPT_SRC}
 				strategy="afterInteractive"
-				onReady={handleScriptReady}
 				onLoad={handleScriptReady}
+				onReady={handleScriptReady}
 			/>
 			{viewerReady && (
-				<div
-					className={`pointer-events-auto absolute inset-y-[-20%] right-[-12%] w-[75vw] max-w-[860px] z-0 ${className}`}
-				>
+				<div className={`select-none ${className}`}>
 					<spline-viewer
 						className="block w-full h-full"
 						loading-anim-type="none"
