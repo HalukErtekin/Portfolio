@@ -74,59 +74,60 @@ export const Header: React.FC<Props> = ({ project, views, locale, switcher }) =>
 			className="relative isolate overflow-hidden bg-gradient-to-tl from-black via-zinc-900 to-black"
 		>
 			<div
-				className={`fixed inset-x-0 top-0 z-50 backdrop-blur lg:backdrop-blur-none duration-200 border-b lg:bg-transparent ${
+				className={`fixed inset-x-0 top-0 z-50 backdrop-blur-md duration-200 border-b ${
 					isIntersecting
-						? "bg-zinc-900/0 border-transparent"
-						: "bg-white/10  border-zinc-200 lg:border-transparent"
+						? "bg-zinc-950/70 border-transparent"
+						: "bg-zinc-950/90 border-zinc-800/80 shadow-lg"
 				}`}
 			>
-				<div className="container flex flex-row-reverse items-center justify-between p-6 mx-auto">
-					<div className="flex items-center gap-6">
-						<LanguageSwitcher locale={locale} labels={switcher} />
-						<div className="flex justify-between gap-6">
-							<span
-								title="View counter for this page"
-								className={`duration-200 hover:font-medium flex items-center gap-1 ${
-									isIntersecting
-										? " text-zinc-400 hover:text-zinc-100"
-										: "text-zinc-600 hover:text-zinc-900"
-								} `}
-							>
-								<Eye className="w-5 h-5" />{" "}
-								{Intl.NumberFormat("en-US", { notation: "compact" }).format(
-									views,
-								)}
-							</span>
-							{socials.map(({ href, label, Icon }) => (
-								<Link
-									key={href}
-									target="_blank"
-									href={href}
-									aria-label={label}
-									rel="noreferrer"
-								>
-									<Icon
-										className={`w-6 h-6 duration-200 hover:font-medium ${
-											isIntersecting
-												? " text-zinc-400 hover:text-zinc-100"
-												: "text-zinc-600 hover:text-zinc-900"
-										} `}
-									/>
-								</Link>
-							))}
-						</div>
-					</div>
-
+				<div className="container relative flex items-center gap-3 px-4 py-3 md:px-6 md:py-4 mx-auto">
 					<Link
 						href={`/${locale}/projects`}
 						className={`duration-200 hover:font-medium ${
 							isIntersecting
 								? " text-zinc-400 hover:text-zinc-100"
-								: "text-zinc-600 hover:text-zinc-900"
+								: "text-zinc-200 hover:text-white"
 						} `}
 					>
 						<ArrowLeft className="w-6 h-6 " />
 					</Link>
+
+					<div className="flex-1 flex items-center justify-center gap-3 text-sm px-2 md:gap-7 lg:gap-8">
+						<span
+							title="View counter for this page"
+							className={`duration-200 hover:font-medium flex items-center gap-1 transition-colors ${
+								isIntersecting
+									? " text-zinc-300 hover:text-white"
+									: "text-zinc-100 hover:text-white"
+							} `}
+						>
+							<Eye className="w-5 h-5 md:w-6 md:h-6" />{" "}
+							{Intl.NumberFormat("en-US", { notation: "compact" }).format(
+								views,
+							)}
+						</span>
+						{socials.map(({ href, label, Icon }) => (
+							<Link
+								key={href}
+								target="_blank"
+								href={href}
+								aria-label={label}
+								rel="noreferrer"
+							>
+								<Icon
+									className={`w-5 h-5 md:w-6 md:h-6 duration-200 hover:font-medium transition-colors ${
+										isIntersecting
+											? " text-zinc-300 hover:text-white"
+											: "text-white hover:text-white"
+									} `}
+								/>
+							</Link>
+						))}
+					</div>
+
+					<div className="shrink-0 md:absolute md:right-6">
+						<LanguageSwitcher locale={locale} labels={switcher} />
+					</div>
 				</div>
 			</div>
 			<div className="container mx-auto relative isolate overflow-hidden  py-24 sm:py-32">

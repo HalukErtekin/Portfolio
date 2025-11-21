@@ -45,38 +45,39 @@ export const Navigation: React.FC<NavigationProps> = ({
 						? "bg-zinc-900/0 border-transparent"
 						: "bg-zinc-900/500  border-zinc-800 "
 				}`}
-		>
-				<div className="container flex flex-row-reverse items-center justify-between p-6 mx-auto">
-					<div className="flex items-center gap-6">
-						<LanguageSwitcher locale={locale} labels={switcher} />
-						<div className="flex justify-between gap-6">
-							<Link
-								href={`/${locale}/projects`}
-								className="duration-200 text-zinc-400 hover:text-zinc-100"
-							>
-								{labels.projects}
-							</Link>
-							<Link
-								href={`/${locale}/about`}
-								className="duration-200 text-zinc-400 hover:text-zinc-100"
-							>
-								{labels.about}
-							</Link>
-							<Link
-								href={`/${locale}/contact`}
-								className="duration-200 text-zinc-400 hover:text-zinc-100"
-							>
-								{labels.contact}
-							</Link>
-						</div>
-					</div>
-
+			>
+				<div className="container relative grid grid-cols-[auto,1fr,auto] items-center gap-3 p-4 md:p-6 mx-auto">
 					<Link
 						href={`/${locale}`}
-						className="duration-200 text-zinc-300 hover:text-zinc-100"
+						className="justify-self-start duration-200 text-zinc-300 hover:text-zinc-100"
 					>
 						<ArrowLeft className="w-6 h-6 " />
 					</Link>
+
+					<div className="flex items-center justify-center gap-6 text-sm text-zinc-400 flex-wrap px-2">
+						<Link
+							href={`/${locale}/projects`}
+							className="duration-200 hover:text-zinc-100"
+						>
+							{labels.projects}
+						</Link>
+						<Link
+							href={`/${locale}/about`}
+							className="duration-200 hover:text-zinc-100"
+						>
+							{labels.about}
+						</Link>
+						<Link
+							href={`/${locale}/contact`}
+							className="duration-200 hover:text-zinc-100"
+						>
+							{labels.contact}
+						</Link>
+					</div>
+
+					<div className="justify-self-end">
+						<LanguageSwitcher locale={locale} labels={switcher} />
+					</div>
 				</div>
 			</div>
 		</header>

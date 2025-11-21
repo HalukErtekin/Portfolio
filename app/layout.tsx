@@ -2,6 +2,7 @@ import "../global.css";
 import { Inter } from "@next/font/google";
 import LocalFont from "@next/font/local";
 import { Metadata } from "next";
+import { defaultLocale } from "@/i18n/config";
 import { Analytics } from "./components/analytics";
 
 const siteUrl = "https://halukertekin.com";
@@ -135,7 +136,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="tr" className={[inter.variable, calSans.variable].join(" ")}>
+		<html lang={defaultLocale} className={[inter.variable, calSans.variable].join(" ")}>
 			<head>
 				<Analytics />
 				<script

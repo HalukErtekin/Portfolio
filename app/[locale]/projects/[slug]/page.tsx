@@ -128,7 +128,7 @@ export default async function PostPage({ params }: Props) {
 			/>
 			{redisEnabled ? <ReportView slug={resolvedProject.slug} /> : null}
 
-			<article className="px-4 py-12 mx-auto prose prose-zinc prose-quoteless">
+			<article className="px-4 py-12 mx-auto prose prose-zinc prose-quoteless [&_pre]:bg-neutral-950 [&_pre]:!bg-opacity-100 [&_pre]:shadow-none [&_pre]:border [&_pre]:border-neutral-800 [&_pre_code]:!bg-transparent [&_pre_code]:!shadow-none [&_pre_code]:!border-0">
 				<Mdx code={resolvedProject.body.code} />
 			</article>
 		</div>

@@ -176,7 +176,7 @@ const components = {
 	pre: ({ className, ...props }) => (
 		<pre
 			className={clsx(
-				"mt-6 mb-4 overflow-x-auto bg-transparent py-4",
+				"mt-6 mb-4 overflow-x-auto rounded-lg border border-zinc-800 bg-neutral-950 py-4 px-4 text-zinc-100 shadow-none",
 				className,
 			)}
 			{...props}
@@ -185,7 +185,7 @@ const components = {
 	code: ({ className, ...props }) => (
 		<code
 			className={clsx(
-				"relative rounded border bg-zinc-300 bg-opacity-25 py-[0.2rem] px-[0.3rem] font-mono text-sm text-zinc-600",
+				"relative rounded border border-transparent bg-transparent py-[0.15rem] px-[0.3rem] font-mono text-sm text-zinc-100",
 				className,
 			)}
 			{...props}
