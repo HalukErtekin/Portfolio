@@ -46,7 +46,7 @@ export const Navigation: React.FC<NavigationProps> = ({
 						: "bg-zinc-900/500  border-zinc-800 "
 				}`}
 			>
-				<div className="container relative grid grid-cols-[auto,1fr,auto] items-center gap-2 p-4 md:p-6 mx-auto">
+				<div className="container relative grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-3 py-3 md:px-6 md:py-5 mx-auto">
 					<Link
 						href={`/${locale}`}
 						className="justify-self-start duration-200 text-zinc-300 hover:text-zinc-100"
@@ -54,7 +54,7 @@ export const Navigation: React.FC<NavigationProps> = ({
 						<ArrowLeft className="w-6 h-6 " />
 					</Link>
 
-					<div className="flex items-center justify-center gap-4 text-[13px] sm:text-sm text-zinc-400 px-2 whitespace-nowrap">
+					<div className="flex items-center justify-center gap-4 text-[12px] sm:text-sm text-zinc-400 px-2 whitespace-nowrap md:gap-6 justify-self-center">
 						<Link
 							href={`/${locale}/projects`}
 							className="duration-200 hover:text-zinc-100"
