@@ -86,10 +86,10 @@ export default async function ContactPage({
 			<div className="container flex items-center justify-center min-h-screen px-4 mx-auto">
 				<div className="w-full space-y-12">
 					<div className="max-w-2xl mx-auto text-center space-y-4">
-						<h1 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
+						<h1 className="text-4xl font-display font-bold tracking-tight text-zinc-100 sm:text-5xl">
 							{dictionary.contact.title}
 						</h1>
-						<p className="text-sm text-zinc-400 sm:text-base">
+						<p className="text-base leading-7 text-zinc-400">
 							{dictionary.contact.description}
 						</p>
 					</div>

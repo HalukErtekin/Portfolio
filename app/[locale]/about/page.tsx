@@ -83,7 +83,7 @@ export default async function AboutPage({
 			/>
 			<main className="px-6 py-24 mx-auto max-w-4xl space-y-12 lg:px-8">
 				<section className="space-y-6">
-					<h1 className="text-4xl font-display font-bold">
+					<h1 className="text-4xl sm:text-5xl font-display font-bold tracking-tight text-zinc-100">
 						{dictionary.about.title}
 					</h1>
 					<div className="mt-4 space-y-4 text-base leading-7 text-zinc-400">
