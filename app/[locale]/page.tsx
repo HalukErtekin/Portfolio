@@ -105,7 +105,7 @@ export default async function Home({ params }: PageProps) {
 				className="absolute inset-0 -z-10 animate-fade-in"
 				quantity={100}
 			/>
-			<h1 className="py-3.5 px-0.5 relative z-10 text-5xl text-white duration-1000 cursor-default text-edge-outline animate-title sm:text-6xl md:text-9xl whitespace-nowrap">
+			<h1 className="py-3.5 px-0.5 relative z-10 text-6xl text-white duration-1000 cursor-default text-edge-outline animate-title sm:text-7xl md:text-9xl whitespace-nowrap">
 				<span className={`${parisienne.className} font-semibold drop-shadow-[0_0_10px_rgba(255,255,255,0.18)]`}>
 					{dictionary.home.title}
 				</span>
@@ -113,7 +113,7 @@ export default async function Home({ params }: PageProps) {
 
 			<div className="hidden w-screen h-px animate-glow md:block animate-fade-right bg-gradient-to-r from-zinc-300/0 via-zinc-300/50 to-zinc-300/0" />
 			<div className="relative z-10 my-16 text-center animate-fade-in px-6 max-w-2xl">
-				<h2 className="text-lg font-semibold text-zinc-100">
+				<h2 className="text-base font-semibold text-zinc-100 sm:text-lg">
 					{dictionary.home.role}
 				</h2>
 				<p className="mt-4 text-sm leading-6 text-zinc-400">
