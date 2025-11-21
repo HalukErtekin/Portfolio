@@ -79,7 +79,7 @@ export default async function Home({ params }: PageProps) {
 	];
 
 	return (
-		<div className="relative flex flex-col items-center justify-center w-screen min-h-screen lg:h-screen overflow-hidden bg-gradient-to-tl from-black via-zinc-600/20 to-black pt-8 pb-40 lg:pt-0 lg:pb-0">
+		<div className="relative flex flex-col items-center justify-center w-screen min-h-screen min-h-[100dvh] lg:h-screen overflow-hidden bg-gradient-to-tl from-black via-zinc-600/20 to-black pt-6 pb-16 sm:pt-8 sm:pb-20 lg:pt-0 lg:pb-0">
 			<div className="absolute right-3 top-3 z-20 sm:right-6 sm:top-6 md:right-10 md:top-8">
 				<LanguageSwitcher
 					locale={locale}
@@ -88,7 +88,7 @@ export default async function Home({ params }: PageProps) {
 			</div>
 			<HeroSpline className="pointer-events-none absolute inset-y-[-0%] right-[-10%] hidden lg:block w-[72vw] max-w-[900px] z-0" />
 			<HeroSpline className="pointer-events-none absolute bottom-[-4%] left-1/2 -translate-x-1/2 w-[160vw] max-w-[1100px] opacity-80 lg:hidden z-0" />
-			<nav className="relative z-10 mt-8 md:mt-14 flex items-center justify-center w-full max-w-4xl px-6">
+			<nav className="relative z-10 mt-6 sm:mt-10 md:mt-14 flex items-center justify-center w-full max-w-4xl px-6">
 				<ul className="flex items-center justify-center gap-10 md:gap-12">
 					{navigation.map((item) => (
 						<Link
@@ -113,7 +113,7 @@ export default async function Home({ params }: PageProps) {
 			</h1>
 
 			<div className="hidden w-screen h-px animate-glow md:block animate-fade-right bg-gradient-to-r from-zinc-300/0 via-zinc-300/50 to-zinc-300/0" />
-			<div className="relative z-10 my-16 text-center animate-fade-in px-6 max-w-2xl">
+			<div className="relative z-10 my-12 sm:my-14 md:my-16 text-center animate-fade-in px-6 max-w-2xl">
 				<h2 className="text-base font-semibold text-zinc-100 sm:text-lg">
 					{dictionary.home.role}
 				</h2>
