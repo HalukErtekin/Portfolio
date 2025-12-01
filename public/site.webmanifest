@@ -1,23 +1,23 @@
 {
   "name": "Haluk Ertekin",
   "short_name": "Haluk",
-  "description": "Portfolio of Haluk Ertekin — Computer Engineering student. Projects in AWS, C programming, networking, cybersecurity, and machine learning.",
+  "description": "Portfolio of Haluk Ertekin - software developer.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#050505",
   "theme_color": "#050505",
   "icons": [
     {
-      "src": "/web-app-manifest-192x192.png",
+      "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
-      "src": "/web-app-manifest-512x512.png",
+      "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ]
 }
