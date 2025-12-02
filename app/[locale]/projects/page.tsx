@@ -123,7 +123,9 @@ export default async function ProjectsPage({
 
 	if (redis) {
 		const keys = publishedProjects.map((project) => buildViewKey(project.slug));
-		const counts = keys.length ? await redis.mget<number>(...keys) : [];
+		const counts = (keys.length
+			? await redis.mget<number | null>(...keys)
+			: []) as (number | null)[];
 		publishedProjects.forEach((project, index) => {
 			views[project.slug] = counts?.[index] ?? 0;
 		});
