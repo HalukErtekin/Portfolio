@@ -7,6 +7,7 @@ import { ReportView } from "@/app/projects/[slug]/view";
 import { Redis } from "@upstash/redis";
 import { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionary";
+import { buildViewKey, getDevView } from "@/util/view-counter";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -113,10 +114,8 @@ export default async function PostPage({ params }: Props) {
 	}
 	const resolvedProject = project;
 
-	const views = redis
-		? ((await redis.get<number>(["pageviews", "projects", slug].join(":"))) ??
-			0)
-		: 0;
+	const key = buildViewKey(slug);
+	const views = redis ? (await redis.get<number>(key)) ?? 0 : getDevView(key);
 
 	return (
 		<div className="bg-zinc-50 min-h-screen">

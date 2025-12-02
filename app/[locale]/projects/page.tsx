@@ -7,8 +7,10 @@ import React from "react";
 import { Card } from "../../components/card";
 import { Navigation } from "../../components/nav";
 import { Article } from "../../projects/article";
+import { Redis } from "@upstash/redis";
 import { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionary";
+import { buildViewKey, getDevViews } from "@/util/view-counter";
 
 const siteUrl = "https://halukertekin.com";
 
@@ -113,6 +115,25 @@ export default async function ProjectsPage({
 	remaining.forEach((project, index) => {
 		columns[index % columns.length].push(project);
 	});
+
+	const redisEnabled =
+		!!process.env.UPSTASH_REDIS_REST_URL &&
+		!!process.env.UPSTASH_REDIS_REST_TOKEN;
+	const redis = redisEnabled ? Redis.fromEnv() : null;
+
+	if (redis) {
+		const keys = publishedProjects.map((project) => buildViewKey(project.slug));
+		const counts = keys.length ? await redis.mget<number>(...keys) : [];
+		publishedProjects.forEach((project, index) => {
+			views[project.slug] = counts?.[index] ?? 0;
+		});
+	} else {
+		const keys = publishedProjects.map((project) => buildViewKey(project.slug));
+		const counts = getDevViews(keys);
+		publishedProjects.forEach((project, index) => {
+			views[project.slug] = counts[index] ?? 0;
+		});
+	}
 
 	return (
 		<div className="relative pb-16">
