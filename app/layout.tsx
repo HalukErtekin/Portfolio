@@ -145,6 +145,11 @@ export default function RootLayout({
 					type="application/ld+json"
 					dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
 				/>
+				<script
+					src="https://analytics.ahrefs.com/analytics.js"
+					data-key="ekUg/ohOZMONp9aEQdqtLA"
+					async
+				/>
 			</head>
 			<body
 				className={`bg-black ${
