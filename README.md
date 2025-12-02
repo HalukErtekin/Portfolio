@@ -65,3 +65,4 @@ pnpm start          # run the compiled app
 
 - Based on the excellent open-source template [chronark/chronark.com](https://github.com/chronark/chronark.com) (MIT).  
   All layout, animation, and theming foundations come from Chronark’s work; content and infrastructure now reflect Haluk Ertekin’s personal portfolio.
+  
