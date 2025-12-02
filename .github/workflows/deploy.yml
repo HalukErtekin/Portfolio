@@ -2,7 +2,7 @@ name: Deploy to EC2
 
 on:
   push:
-    branches: [ "main" ]   # ana branch'in adı farklıysa burada değiştir
+    branches: ["main"]
 
 jobs:
   deploy:
@@ -14,10 +14,20 @@ jobs:
 
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          # port: 22  # varsayılan 22 zaten, istersen açıkça bırakabilirsin
           script: |
+            cd /var/www/portfolio
+
+            # write runtime env vars for the app (per release)
+            cat <<'EOF' > .env.local
+            UPSTASH_REDIS_REST_URL=${UPSTASH_REDIS_REST_URL}
+            UPSTASH_REDIS_REST_TOKEN=${UPSTASH_REDIS_REST_TOKEN}
+            EOF
+
             /usr/local/bin/deploy_portfolio.sh
